@@ -1,8 +1,17 @@
-# scip-ada
-
-[![CI](https://github.com/AdalineAi/scip-ada/actions/workflows/ci.yml/badge.svg)](https://github.com/AdalineAi/scip-ada/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Alire](https://img.shields.io/badge/alire-scip__ada-orange)](https://alire.ada.dev/crates/scip_ada)
+<div align="center">
+   <h1>scip-ada</h1>
+   <p><strong>An SCIP indexer for Ada and SPARK</strong></p>
+   <p>
+      <img alt="Ada 2022" src="https://img.shields.io/badge/Ada-2022-0F766E?style=for-the-badge">
+      <img alt="SPARK supported" src="https://img.shields.io/badge/SPARK-supported-4338CA?style=for-the-badge">
+      <img alt="SCIP by Sourcegraph" src="https://img.shields.io/badge/SCIP-Sourcegraph-F96316?style=for-the-badge&logo=sourcegraph&logoColor=white">
+   </p>
+   <p>
+      <a href="https://github.com/AdalineAi/scip-ada/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/AdalineAi/scip-ada/actions/workflows/ci.yml/badge.svg"></a>
+      <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
+      <a href="https://alire.ada.dev/crates/scip_ada"><img alt="Alire" src="https://img.shields.io/badge/alire-scip__ada-orange"></a>
+   </p>
+</div>
 
 An [SCIP](https://github.com/sourcegraph/scip) indexer for Ada and SPARK, producing language-agnostic code intelligence indices from Ada source code.
 
