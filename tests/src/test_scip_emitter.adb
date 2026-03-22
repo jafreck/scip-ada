@@ -1,4 +1,4 @@
-with Ada.Text_IO;
+with AUnit.Assertions;
 with Ada.Streams;
 with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;
@@ -91,151 +91,98 @@ package body Test_SCIP_Emitter is
       return False;
    end Contains_Bytes;
 
-   procedure Cleanup is
-   begin
-      if Ada.Directories.Exists (Output_File) then
-         Ada.Directories.Delete_File (Output_File);
-      end if;
-   end Cleanup;
-
-   procedure Run (Passed : out Natural; Failed : out Natural) is
+   procedure Write_Test_Output is
       AF : constant ALI_File := Make_Test_ALI;
    begin
-      Passed := 0;
-      Failed := 0;
-      Cleanup;
+      SCIP_Ada.SCIP.Emitter.Emit
+        (ALI_Data     => AF,
+         Output_Path  => Output_File,
+         Project_Root => "file:///test/project");
+   end Write_Test_Output;
 
-      --  Test 1: Emit creates non-empty file
-      begin
-         SCIP_Ada.SCIP.Emitter.Emit
-           (ALI_Data     => AF,
-            Output_Path  => Output_File,
-            Project_Root => "file:///test/project");
+   procedure Assert_Non_Empty_Output (Message : String) is
+   begin
+      AUnit.Assertions.Assert
+        (Ada.Directories.Exists (Output_File)
+         and then Natural (Ada.Directories.Size (Output_File)) > 0,
+         Message);
+   end Assert_Non_Empty_Output;
 
-         if Ada.Directories.Exists (Output_File)
-           and then Natural (Ada.Directories.Size (Output_File)) > 0
-         then
-            Ada.Text_IO.Put_Line ("    PASS: Emit creates non-empty file");
-            Passed := Passed + 1;
-         else
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Emit did not create file or file is empty");
-            Failed := Failed + 1;
-         end if;
-      exception
-         when others =>
-            Ada.Text_IO.Put_Line ("    FAIL: Emit raised exception");
-            Failed := Failed + 1;
-      end;
+   procedure Test_Emit_Creates_Non_Empty_File
+     (T : in out SCIP_Ada.Tests.Fixture)
+   is
+      pragma Unreferenced (T);
+      AF : constant ALI_File := Make_Test_ALI;
+   begin
+      SCIP_Ada.SCIP.Emitter.Emit
+        (ALI_Data     => AF,
+         Output_Path  => Output_File,
+         Project_Root => "file:///test/project");
+      Assert_Non_Empty_Output ("Emit did not create a non-empty file");
+   end Test_Emit_Creates_Non_Empty_File;
 
-      --  Test 2: Output starts with metadata tag 0x0A
+   procedure Test_Output_Starts_With_Metadata_Tag
+     (T : in out SCIP_Ada.Tests.Fixture)
+   is
+      pragma Unreferenced (T);
+      use type Ada.Streams.Stream_Element;
+   begin
+      Write_Test_Output;
       declare
-         use type Ada.Streams.Stream_Element;
          D : constant Ada.Streams.Stream_Element_Array := Read_Output;
       begin
-         if D'Length > 0
-           and then D (D'First) = Ada.Streams.Stream_Element (16#0A#)
-         then
-            Ada.Text_IO.Put_Line
-              ("    PASS: Output starts with metadata tag 0x0A");
-            Passed := Passed + 1;
-         else
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Output does not start with metadata tag");
-            Failed := Failed + 1;
-         end if;
-      exception
-         when others =>
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Could not read output for tag check");
-            Failed := Failed + 1;
+         AUnit.Assertions.Assert
+           (D'Length > 0
+            and then D (D'First) = Ada.Streams.Stream_Element (16#0A#),
+            "Output does not start with metadata tag 16#0A#");
       end;
+   end Test_Output_Starts_With_Metadata_Tag;
 
-      --  Test 3: Output contains "scip-ada" tool name
-      begin
-         if Contains_Bytes (Read_Output, "scip-ada") then
-            Ada.Text_IO.Put_Line
-              ("    PASS: Output contains 'scip-ada' tool name");
-            Passed := Passed + 1;
-         else
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Output does not contain 'scip-ada'");
-            Failed := Failed + 1;
-         end if;
-      exception
-         when others =>
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Exception searching for tool name");
-            Failed := Failed + 1;
-      end;
+   procedure Test_Output_Contains_Tool_Name
+     (T : in out SCIP_Ada.Tests.Fixture)
+   is
+      pragma Unreferenced (T);
+   begin
+      Write_Test_Output;
+      AUnit.Assertions.Assert
+        (Contains_Bytes (Read_Output, "scip-ada"),
+         "Output does not contain 'scip-ada'");
+   end Test_Output_Contains_Tool_Name;
 
-      --  Test 4: Output contains relative path
-      begin
-         if Contains_Bytes (Read_Output, "src/hello.adb") then
-            Ada.Text_IO.Put_Line
-              ("    PASS: Output contains 'src/hello.adb' path");
-            Passed := Passed + 1;
-         else
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Output does not contain expected path");
-            Failed := Failed + 1;
-         end if;
-      exception
-         when others =>
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Exception searching for path");
-            Failed := Failed + 1;
-      end;
+   procedure Test_Output_Contains_Relative_Path
+     (T : in out SCIP_Ada.Tests.Fixture)
+   is
+      pragma Unreferenced (T);
+   begin
+      Write_Test_Output;
+      AUnit.Assertions.Assert
+        (Contains_Bytes (Read_Output, "src/hello.adb"),
+         "Output does not contain the expected relative path");
+   end Test_Output_Contains_Relative_Path;
 
-      --  Test 5: Output contains "Hello" entity name
-      begin
-         if Contains_Bytes (Read_Output, "Hello") then
-            Ada.Text_IO.Put_Line
-              ("    PASS: Output contains 'Hello' entity name");
-            Passed := Passed + 1;
-         else
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Output does not contain 'Hello'");
-            Failed := Failed + 1;
-         end if;
-      exception
-         when others =>
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Exception searching for entity name");
-            Failed := Failed + 1;
-      end;
+   procedure Test_Output_Contains_Entity_Name
+     (T : in out SCIP_Ada.Tests.Fixture)
+   is
+      pragma Unreferenced (T);
+   begin
+      Write_Test_Output;
+      AUnit.Assertions.Assert
+        (Contains_Bytes (Read_Output, "Hello"),
+         "Output does not contain the expected entity name");
+   end Test_Output_Contains_Entity_Name;
 
-      --  Test 6: Emit with empty ALI still creates output
-      begin
-         Cleanup;
-         declare
-            Empty_AF : ALI_File;
-         begin
-            SCIP_Ada.SCIP.Emitter.Emit
-              (ALI_Data     => Empty_AF,
-               Output_Path  => Output_File,
-               Project_Root => "file:///empty");
-
-            if Ada.Directories.Exists (Output_File)
-              and then Natural (Ada.Directories.Size (Output_File)) > 0
-            then
-               Ada.Text_IO.Put_Line
-                 ("    PASS: Emit with empty ALI creates output");
-               Passed := Passed + 1;
-            else
-               Ada.Text_IO.Put_Line
-                 ("    FAIL: Emit with empty ALI failed");
-               Failed := Failed + 1;
-            end if;
-         end;
-      exception
-         when others =>
-            Ada.Text_IO.Put_Line
-              ("    FAIL: Emit with empty ALI raised exception");
-            Failed := Failed + 1;
-      end;
-
-      Cleanup;
-   end Run;
+   procedure Test_Emit_Empty_ALI_Creates_Output
+     (T : in out SCIP_Ada.Tests.Fixture)
+   is
+      pragma Unreferenced (T);
+      Empty_AF : ALI_File;
+   begin
+      SCIP_Ada.SCIP.Emitter.Emit
+        (ALI_Data     => Empty_AF,
+         Output_Path  => Output_File,
+         Project_Root => "file:///empty");
+      Assert_Non_Empty_Output
+        ("Emit with an empty ALI file did not create output");
+   end Test_Emit_Empty_ALI_Creates_Output;
 
 end Test_SCIP_Emitter;
