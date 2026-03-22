@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: scip-ada-linux-x86_64
+            binary: bin/scip_ada
+          - os: macos-latest
+            artifact: scip-ada-macos-arm64
+            binary: bin/scip_ada
+          - os: macos-13
+            artifact: scip-ada-macos-x86_64
+            binary: bin/scip_ada
+          - os: windows-latest
+            artifact: scip-ada-windows-x86_64.exe
+            binary: bin/scip_ada.exe
+
+    runs-on: ${{ matrix.os }}
+    name: Build (${{ matrix.artifact }})
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Alire
+        uses: alire-project/setup-alire@v4
+
+      - name: Build (release)
+        run: alr build --release
+
+      - name: Verify binary (Unix)
+        if: runner.os != 'Windows'
+        run: ./bin/scip_ada --help
+
+      - name: Verify binary (Windows)
+        if: runner.os == 'Windows'
+        run: .\bin\scip_ada.exe --help
+
+      - name: Rename artifact (Unix)
+        if: runner.os != 'Windows'
+        run: cp ${{ matrix.binary }} ${{ matrix.artifact }}
+
+      - name: Rename artifact (Windows)
+        if: runner.os == 'Windows'
+        run: copy ${{ matrix.binary }} ${{ matrix.artifact }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Create Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Get version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release
+          for dir in artifacts/*/; do
+            cp "$dir"* release/ 2>/dev/null || true
+          done
+          cd release
+          for f in *; do
+            if [[ "$f" != *.exe ]]; then
+              chmod +x "$f"
+            fi
+            # Prefix with version
+            mv "$f" "scip-ada-${{ steps.version.outputs.version }}-${f#scip-ada-}"
+          done
+          ls -la
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: scip-ada ${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: release/*

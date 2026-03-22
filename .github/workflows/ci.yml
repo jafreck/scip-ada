@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: Linux x86_64
+          - os: macos-latest
+            name: macOS arm64
+          - os: macos-13
+            name: macOS x86_64
+          - os: windows-latest
+            name: Windows x86_64
+
+    runs-on: ${{ matrix.os }}
+    name: Build (${{ matrix.name }})
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Alire
+        uses: alire-project/setup-alire@v4
+
+      - name: Build
+        run: alr build
+
+      - name: Verify --help (Unix)
+        if: runner.os != 'Windows'
+        run: ./bin/scip_ada --help
+
+      - name: Verify --help (Windows)
+        if: runner.os == 'Windows'
+        run: .\bin\scip_ada.exe --help
+
+      - name: Build tests
+        run: alr exec -- gprbuild -P tests/scip_ada_tests.gpr
+
+      - name: Run tests (Unix)
+        if: runner.os != 'Windows'
+        run: ./bin/test_runner
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        run: .\bin\test_runner.exe

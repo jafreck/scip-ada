@@ -1,0 +1,55 @@
+with "config/scip_ada_config.gpr";
+with "libadalang.gpr";
+project Scip_Ada is
+
+   type Enrich_Mode is ("yes", "no");
+   Enrich : Enrich_Mode := external ("ENRICH", "yes");
+
+   LAL_Source_Dirs := ();
+   case Enrich is
+      when "yes" => LAL_Source_Dirs := ("src/lal/");
+      when "no"  => LAL_Source_Dirs := ("src/lal_stubs/");
+   end case;
+
+   for Source_Dirs use ("src/", "config/") & LAL_Source_Dirs;
+   for Object_Dir use "obj/" & Scip_Ada_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Exec_Dir use "bin";
+   for Main use ("scip_ada-main.adb");
+
+   package Builder is
+      for Executable ("scip_ada-main.adb") use "scip_ada";
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Scip_Ada_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+      case Scip_Ada_Config.Build_Profile is
+         when "release" =>
+            for Switches ("Ada") use ("-Es", "-static");
+         when others =>
+            null;
+      end case;
+   end Binder;
+
+   package Linker is
+      for Switches ("Ada") use
+        ("-lgnarl", "-Wno-overriding-deployment-version");
+      case Scip_Ada_Config.Build_Profile is
+         when "release" =>
+            for Switches ("Ada") use
+              ("-lgnarl", "-static",
+               "-Wno-overriding-deployment-version");
+         when others =>
+            null;
+      end case;
+   end Linker;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Scip_Ada;

@@ -1,0 +1,17 @@
+name = "scip_ada"
+description = "SCIP indexer for Ada/SPARK"
+version = "0.1.0-dev"
+
+authors = ["Jacob Freck"]
+maintainers = ["Jacob Freck <jacob.freck@gmail.com>"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = ["scip", "ada", "indexer", "code-navigation"]
+
+executables = ["scip_ada"]
+
+[[depends-on]]
+aunit = "^26.0.0"
+
+[[depends-on]]
+libadalang = "*"

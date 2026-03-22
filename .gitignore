@@ -8,3 +8,17 @@ dist/
 build/
 *.egg-info/
 index.scip
+
+# Alire
+.als-alire
+alire/
+obj/
+bin/
+config/
+
+# E2E fixture artifacts
+tests/fixtures/*/obj/
+tests/fixtures/*/bin/
+tests/fixtures/*/lib/
+tests/fixtures/*/index.scip
+tests/fixtures/*/snapshot_new/
