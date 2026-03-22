@@ -1,0 +1,10 @@
+.DS_Store
+*.o
+*.ali
+*.pyc
+__pycache__/
+target/
+dist/
+build/
+*.egg-info/
+index.scip
