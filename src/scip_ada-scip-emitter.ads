@@ -8,6 +8,7 @@ with Ada.Containers.Vectors;
 with Ada.Strings.Hash;
 with SCIP_Ada.ALI.Types;
 with SCIP_Ada.Project;
+with SCIP_Ada.SCIP.Symbols;
 
 package SCIP_Ada.SCIP.Emitter is
 
@@ -65,6 +66,7 @@ package SCIP_Ada.SCIP.Emitter is
       Relationships           : Relationship_Entry_Vectors.Vector;
       Kind_Overrides          : Kind_Override_Maps.Map;
       Display_Name_Overrides  : Signature_Maps.Map;
+      Pkg_Context            : SCIP_Ada.SCIP.Symbols.Symbol_Context;
    end record;
 
    function Empty_Enrichment return Enrichment_Map;
