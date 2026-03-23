@@ -386,6 +386,55 @@ package body SCIP_Ada.CLI is
                                          Make_Context (".", ".", ".");
                                        Chain : Descriptor_Vectors.Vector;
                                     begin
+                                       --  Build scope descriptors from
+                                       --  Parent_Scope if available.
+                                       if Length (Rel.Parent_Scope) > 0
+                                       then
+                                          declare
+                                             Scope : constant String :=
+                                               To_String
+                                                 (Rel.Parent_Scope);
+                                             Start : Positive :=
+                                               Scope'First;
+                                             Dot   : Natural;
+                                          begin
+                                             loop
+                                                Dot :=
+                                                  Ada.Strings.Fixed.Index
+                                                    (Scope
+                                                       (Start
+                                                        .. Scope'Last),
+                                                     ".");
+                                                if Dot > 0 then
+                                                   Chain.Append
+                                                     ((Name =>
+                                                         To_Unbounded_String
+                                                           (Scope
+                                                              (Start
+                                                               .. Dot - 1)),
+                                                       Kind =>
+                                                         Namespace,
+                                                       Overload => 0));
+                                                   Start := Dot + 1;
+                                                else
+                                                   --  Last segment is
+                                                   --  the type scope.
+                                                   Chain.Append
+                                                     ((Name =>
+                                                         To_Unbounded_String
+                                                           (Scope
+                                                              (Start
+                                                               .. Scope
+                                                                    'Last)),
+                                                       Kind =>
+                                                         Type_Descriptor,
+                                                       Overload => 0));
+                                                   exit;
+                                                end if;
+                                             end loop;
+                                          end;
+                                       end if;
+
                                        case Rel.Kind is
                                           when SCIP_Ada.LAL.Relationships
                                                  .Extends
