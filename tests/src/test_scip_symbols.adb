@@ -455,4 +455,64 @@ package body Test_SCIP_Symbols is
       Run_Remaining_Type_And_Object_Kinds;
    end Test_Remaining_Type_And_Object_Kinds;
 
+   procedure Run_Name_Escaping is
+      Alr_Ctx : constant Symbol_Context :=
+        Make_Context ("alr", "my_project", ".");
+      Hello_Parent : Descriptor_Vectors.Vector;
+   begin
+      Append_Hello_Parent (Hello_Parent);
+
+      --  Plain name: no escaping needed
+      Check
+        ("Plain name no escaping",
+         Format_Descriptor
+           ((Name     => To_Unbounded_String ("Hello"),
+             Kind     => Term,
+             Overload => 0)),
+         "Hello.");
+
+      --  Name with space: backtick-wrapped
+      Check
+        ("Name with space",
+         Format_Descriptor
+           ((Name     => To_Unbounded_String ("My Name"),
+             Kind     => Term,
+             Overload => 0)),
+         "`My Name`.");
+
+      --  Name with backtick: backtick-wrapped, internal backtick doubled
+      Check
+        ("Name with backtick",
+         Format_Descriptor
+           ((Name     => To_Unbounded_String ("has`tick"),
+             Kind     => Term,
+             Overload => 0)),
+         "`has``tick`.");
+
+      --  Operator symbol "+": contains quotes, needs backtick wrapping
+      Check
+        ("Operator + descriptor",
+         Format_Descriptor
+           ((Name     => To_Unbounded_String ("""+"""),
+             Kind     => Method,
+             Overload => 0)),
+         "`""+""`().");
+
+      --  Operator in full symbol string
+      Check
+        ("Operator + full symbol",
+         To_Symbol_String
+           (Make_Entity ("""=""", Function_Entity),
+            Alr_Ctx, Hello_Parent),
+         "scip-ada alr my_project . Hello/`""=""`().");
+   end Run_Name_Escaping;
+
+   procedure Test_Name_Escaping
+     (T : in out SCIP_Ada.Tests.Fixture)
+   is
+      pragma Unreferenced (T);
+   begin
+      Run_Name_Escaping;
+   end Test_Name_Escaping;
+
 end Test_SCIP_Symbols;
