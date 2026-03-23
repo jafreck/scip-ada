@@ -1,0 +1,26 @@
+V "GNAT Lib v2024"
+A -gnatA
+P ZX
+
+U math_ops%s math_ops.ads abc123 EE NE
+
+D math_ops.ads 20240101120000 aaa111 math_ops
+D math_ops.adb 20240101120001 bbb222 math_ops
+D system.ads 20240101120000 ccc333 system%s
+
+X 1 math_ops.ads
+3K9*Math_Ops 4e12 2|3b7 2|35l8
+5V14*Add 2|5b14 2|10s14
+6V14*Add 2|7b14 2|15s14
+7V14*Add 2|9b14 2|20s14
+9U14*Process 2|12b14
+10U14*Process 2|14b14
+12I9*Result_Type 15r9
+13F9*Float_Result 16r9
+X 2 math_ops.adb
+3K9 Math_Ops 35l8
+5V14 Add
+7V14 Add
+9V14 Add
+12U14 Process
+14U14 Process

@@ -1,0 +1,22 @@
+V "GNAT Lib v2024"
+A -gnatA
+P ZX
+
+U big_pkg%s big_pkg.ads abc123 EE NE
+
+D big_pkg.ads 20240101120000 aaa111 big_pkg
+D big_pkg.adb 20240101120001 bbb222 big_pkg
+D client1.adb 20240101120002 ccc333 client1
+D client2.adb 20240101120003 ddd444 client2
+D system.ads 20240101120000 eee555 system%s
+
+X 1 big_pkg.ads
+3K9*Big_Pkg 4e11 2|3b7 2|50l8
+5I9*Important_Type 2|5r9 2|10r9 2|15r9 2|20r9
+. 2|25r9 2|30r9 3|5r9 3|10r9
+. 3|15r9 4|5r9 4|10r9 4|15r9
+7U14*Widely_Used 2|7b14 2|12s14 2|22s14
+. 2|32s14 3|7s14 3|12s14
+. 4|7s14 4|12s14
+X 2 big_pkg.adb
+3K9 Big_Pkg 50l8

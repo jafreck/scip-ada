@@ -22,3 +22,8 @@ tests/fixtures/*/bin/
 tests/fixtures/*/lib/
 tests/fixtures/*/index.scip
 tests/fixtures/*/snapshot_new/
+
+# Unit test ALI fixtures are committed inputs
+!tests/fixtures/*.ali
+!tests/fixtures/project_fixture/obj/
+!tests/fixtures/project_fixture/obj/*.ali
