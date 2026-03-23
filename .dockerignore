@@ -1,0 +1,11 @@
+.git
+.github
+.vscode
+.als-alire
+alire
+bin
+obj
+index.scip
+test_output.scip
+tests/fixtures/**/bin
+tests/fixtures/**/obj

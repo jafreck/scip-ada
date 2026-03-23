@@ -1,0 +1,10 @@
+V "GNAT Lib v2024"
+A -gnatA
+P ZX
+
+U utils%s		utils.ads		def456 EE NE
+
+D utils.ads		20240101120000 def456 utils
+
+X 1 utils.ads
+2V14*Add

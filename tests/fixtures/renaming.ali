@@ -1,0 +1,19 @@
+V "GNAT Lib v2024"
+A -gnatA
+P ZX
+
+U renaming_example%s renaming_example.ads abc123 EE NE
+
+D renaming_example.ads 20240101120000 aaa111 renaming_example
+D renaming_example.adb 20240101120001 bbb222 renaming_example
+D system.ads 20240101120000 ccc333 system%s
+
+X 1 renaming_example.ads
+3K9*Renaming_Example 4e20 2|3b7 2|20l8
+5U14*Original_Proc 2|5b14 2|10s14
+7U14*Renamed_Proc=Original_Proc 2|12s14
+9I9*Base_Count 2|7r9
+10i9*Alias_Count=Base_Count 2|8r9
+X 2 renaming_example.adb
+3K9 Renaming_Example 20l8
+5U14 Original_Proc
