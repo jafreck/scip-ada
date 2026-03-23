@@ -291,8 +291,22 @@ package body SCIP_Ada.CLI is
             return;
          end if;
 
-         --  Default package identity from project
+         --  Default package identity from project.
+         --  Prefer alire.toml metadata when available; fall back to
+         --  the GPR project name.
          if Pkg_Name = Null_Unbounded_String
+           and then Info.Alire_Name /= Null_Unbounded_String
+         then
+            Pkg_Name := Info.Alire_Name;
+            if Pkg_Manager = Null_Unbounded_String then
+               Pkg_Manager := To_Unbounded_String ("alire");
+            end if;
+            if Pkg_Version = Null_Unbounded_String
+              and then Info.Alire_Version /= Null_Unbounded_String
+            then
+               Pkg_Version := Info.Alire_Version;
+            end if;
+         elsif Pkg_Name = Null_Unbounded_String
            and then Info.Project_Name /= Null_Unbounded_String
          then
             Pkg_Name := Info.Project_Name;
