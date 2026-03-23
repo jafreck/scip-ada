@@ -20,9 +20,6 @@ jobs:
           - os: macos-latest
             artifact: scip-ada-macos-arm64
             binary: bin/scip_ada
-          - os: macos-13
-            artifact: scip-ada-macos-x86_64
-            binary: bin/scip_ada
           - os: windows-latest
             artifact: scip-ada-windows-x86_64.exe
             binary: bin/scip_ada.exe
