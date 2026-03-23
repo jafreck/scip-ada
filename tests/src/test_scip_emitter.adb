@@ -8,6 +8,7 @@ with SCIP_Ada.SCIP.Emitter;
 
 package body Test_SCIP_Emitter is
 
+   use Ada.Streams;
    use Ada.Strings.Unbounded;
    use SCIP_Ada.ALI.Types;
 
@@ -55,12 +56,34 @@ package body Test_SCIP_Emitter is
       return Data (1 .. Last);
    end Read_Output;
 
+   function To_Bytes
+     (Target : String) return Ada.Streams.Stream_Element_Array
+   is
+   begin
+      if Target'Length = 0 then
+         return (1 .. 0 => 0);
+      end if;
+
+      declare
+         Result : Ada.Streams.Stream_Element_Array
+           (1 .. Ada.Streams.Stream_Element_Offset (Target'Length));
+      begin
+         for I in Target'Range loop
+            Result
+              (Ada.Streams.Stream_Element_Offset
+                 (I - Target'First + 1)) :=
+              Ada.Streams.Stream_Element (Character'Pos (Target (I)));
+         end loop;
+         return Result;
+      end;
+   end To_Bytes;
+
    function Contains_Bytes
      (Data   : Ada.Streams.Stream_Element_Array;
-      Target : String) return Boolean
+      Target : Ada.Streams.Stream_Element_Array) return Boolean
    is
-      use type Ada.Streams.Stream_Element;
-      use type Ada.Streams.Stream_Element_Offset;
+      Target_Length : constant Ada.Streams.Stream_Element_Offset :=
+        Ada.Streams.Stream_Element_Offset (Target'Length);
    begin
       if Target'Length = 0 then
          return True;
@@ -68,17 +91,14 @@ package body Test_SCIP_Emitter is
       if Data'Length < Target'Length then
          return False;
       end if;
-      for I in Data'First ..
-        Data'Last - Ada.Streams.Stream_Element_Offset (Target'Length) + 1
-      loop
+      for I in Data'First .. Data'Last - Target_Length + 1 loop
          declare
             Match : Boolean := True;
          begin
-            for J in 0 .. Target'Length - 1 loop
-               if Data (I + Ada.Streams.Stream_Element_Offset (J)) /=
-                 Ada.Streams.Stream_Element
-                   (Character'Pos (Target (Target'First + J)))
-               then
+            for J in Ada.Streams.Stream_Element_Offset range
+              0 .. Target_Length - 1
+            loop
+               if Data (I + J) /= Target (Target'First + J) then
                   Match := False;
                   exit;
                end if;
@@ -91,6 +111,14 @@ package body Test_SCIP_Emitter is
       return False;
    end Contains_Bytes;
 
+   function Contains_Bytes
+     (Data   : Ada.Streams.Stream_Element_Array;
+      Target : String) return Boolean
+   is
+   begin
+      return Contains_Bytes (Data, To_Bytes (Target));
+   end Contains_Bytes;
+
    procedure Write_Test_Output is
       AF : constant ALI_File := Make_Test_ALI;
    begin
@@ -99,6 +127,22 @@ package body Test_SCIP_Emitter is
          Output_Path  => Output_File,
          Project_Root => "file:///test/project");
    end Write_Test_Output;
+
+    procedure Write_Enriched_Test_Output is
+         AF : constant ALI_File := Make_Test_ALI;
+         Enrichment : SCIP_Ada.SCIP.Emitter.Enrichment_Map :=
+            SCIP_Ada.SCIP.Emitter.Empty_Enrichment;
+    begin
+         SCIP_Ada.SCIP.Emitter.Add_Signature
+            (Enrichment, "src/hello.adb", 3, "procedure Hello");
+         SCIP_Ada.SCIP.Emitter.Add_Doc_Comment
+            (Enrichment, "src/hello.adb", 3, "Test docs");
+         SCIP_Ada.SCIP.Emitter.Emit_Index
+            (ALI_Files    => (1 => AF),
+             Output_Path  => Output_File,
+             Project_Root => "file:///test/project",
+             Enrichment   => Enrichment);
+    end Write_Enriched_Test_Output;
 
    procedure Assert_Non_Empty_Output (Message : String) is
    begin
@@ -125,7 +169,6 @@ package body Test_SCIP_Emitter is
      (T : in out SCIP_Ada.Tests.Fixture)
    is
       pragma Unreferenced (T);
-      use type Ada.Streams.Stream_Element;
    begin
       Write_Test_Output;
       declare
@@ -170,6 +213,45 @@ package body Test_SCIP_Emitter is
         (Contains_Bytes (Read_Output, "Hello"),
          "Output does not contain the expected entity name");
    end Test_Output_Contains_Entity_Name;
+
+    procedure Test_Enriched_Output_Uses_Signature_Documentation
+       (T : in out SCIP_Ada.Tests.Fixture)
+    is
+         pragma Unreferenced (T);
+
+         Signature   : constant String := "procedure Hello";
+         Doc_Comment : constant String := "Test docs";
+         Signature_Target : constant Ada.Streams.Stream_Element_Array :=
+            (1 => 16#3A#, 2 => 16#16#, 3 => 16#22#, 4 => 16#03#) &
+            To_Bytes ("ada") &
+            (1 => 16#2A#,
+             2 => Ada.Streams.Stream_Element (Signature'Length)) &
+            To_Bytes (Signature);
+         Doc_Target : constant Ada.Streams.Stream_Element_Array :=
+            (1 => 16#1A#,
+             2 => Ada.Streams.Stream_Element (Doc_Comment'Length)) &
+            To_Bytes (Doc_Comment);
+         Signature_As_Doc_Target : constant Ada.Streams.Stream_Element_Array :=
+            (1 => 16#1A#,
+             2 => Ada.Streams.Stream_Element (Signature'Length)) &
+            To_Bytes (Signature);
+    begin
+         Write_Enriched_Test_Output;
+
+         declare
+             D : constant Ada.Streams.Stream_Element_Array := Read_Output;
+         begin
+             AUnit.Assertions.Assert
+                (Contains_Bytes (D, Signature_Target),
+                  "Enriched output does not contain signature_documentation");
+             AUnit.Assertions.Assert
+                (Contains_Bytes (D, Doc_Target),
+                  "Enriched output does not contain documentation bytes");
+             AUnit.Assertions.Assert
+                (not Contains_Bytes (D, Signature_As_Doc_Target),
+                  "Signature is still encoded as generic documentation");
+         end;
+    end Test_Enriched_Output_Uses_Signature_Documentation;
 
    procedure Test_Emit_Empty_ALI_Creates_Output
      (T : in out SCIP_Ada.Tests.Fixture)
