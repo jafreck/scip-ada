@@ -86,6 +86,12 @@ package body SCIP_Ada.CLI is
                 "Exclude files matching pattern (repeatable)");
       Put_Line ("  --no-enrich               " &
                 "Skip libadalang enrichment pass");
+      Put_Line ("  --package-manager <name>  " &
+                "Package manager (e.g., alire, gpr)");
+      Put_Line ("  --package-name <name>     " &
+                "Package/crate name (default: GPR project name)");
+      Put_Line ("  --package-version <ver>   " &
+                "Package version (default: 0.0.0)");
       Put_Line ("  --help, -h                " &
                 "Show this help message");
       New_Line;
@@ -126,6 +132,9 @@ package body SCIP_Ada.CLI is
       Level        : Verbosity_Level := Normal;
       Excludes     : Exclude_Vectors.Vector;
       Do_Enrich    : Boolean := SCIP_Ada.LAL.Enricher.Is_Available;
+      Pkg_Manager  : Unbounded_String := Null_Unbounded_String;
+      Pkg_Name     : Unbounded_String := Null_Unbounded_String;
+      Pkg_Version  : Unbounded_String := Null_Unbounded_String;
 
       I : Positive := 2;  --  skip "index" subcommand
    begin
@@ -185,6 +194,33 @@ package body SCIP_Ada.CLI is
 
             elsif Arg = "--no-enrich" then
                Do_Enrich := False;
+
+            elsif Arg = "--package-manager" then
+               if I = Argument_Count then
+                  Log_Error ("--package-manager requires an argument");
+                  Run_Success := False;
+                  return;
+               end if;
+               I := I + 1;
+               Pkg_Manager := To_Unbounded_String (Argument (I));
+
+            elsif Arg = "--package-name" then
+               if I = Argument_Count then
+                  Log_Error ("--package-name requires an argument");
+                  Run_Success := False;
+                  return;
+               end if;
+               I := I + 1;
+               Pkg_Name := To_Unbounded_String (Argument (I));
+
+            elsif Arg = "--package-version" then
+               if I = Argument_Count then
+                  Log_Error ("--package-version requires an argument");
+                  Run_Success := False;
+                  return;
+               end if;
+               I := I + 1;
+               Pkg_Version := To_Unbounded_String (Argument (I));
 
             else
                Log_Error ("unknown option: " & Arg);
@@ -253,6 +289,36 @@ package body SCIP_Ada.CLI is
             Log_Error ("no .ali files found");
             Run_Success := False;
             return;
+         end if;
+
+         --  Default package identity from project.
+         --  Prefer alire.toml metadata when available; fall back to
+         --  the GPR project name.
+         if Pkg_Name = Null_Unbounded_String
+           and then Info.Alire_Name /= Null_Unbounded_String
+         then
+            Pkg_Name := Info.Alire_Name;
+            if Pkg_Manager = Null_Unbounded_String then
+               Pkg_Manager := To_Unbounded_String ("alire");
+            end if;
+            if Pkg_Version = Null_Unbounded_String
+              and then Info.Alire_Version /= Null_Unbounded_String
+            then
+               Pkg_Version := Info.Alire_Version;
+            end if;
+         elsif Pkg_Name = Null_Unbounded_String
+           and then Info.Project_Name /= Null_Unbounded_String
+         then
+            Pkg_Name := Info.Project_Name;
+         end if;
+         if Pkg_Manager = Null_Unbounded_String then
+            Pkg_Manager := To_Unbounded_String (".");
+         end if;
+         if Pkg_Name = Null_Unbounded_String then
+            Pkg_Name := To_Unbounded_String (".");
+         end if;
+         if Pkg_Version = Null_Unbounded_String then
+            Pkg_Version := To_Unbounded_String (".");
          end if;
 
          --  Filter excluded files
@@ -383,7 +449,10 @@ package body SCIP_Ada.CLI is
                                     declare
                                        use SCIP_Ada.SCIP.Symbols;
                                        Ctx   : constant Symbol_Context :=
-                                         Make_Context (".", ".", ".");
+                                         Make_Context
+                                           (To_String (Pkg_Manager),
+                                            To_String (Pkg_Name),
+                                            To_String (Pkg_Version));
                                        Chain : Descriptor_Vectors.Vector;
                                     begin
                                        --  Build scope descriptors from
@@ -526,6 +595,11 @@ package body SCIP_Ada.CLI is
                                " source file(s)");
 
                   --  Emit SCIP index with enrichment
+                  Enrich_Map.Pkg_Context :=
+                    SCIP_Ada.SCIP.Symbols.Make_Context
+                      (To_String (Pkg_Manager),
+                       To_String (Pkg_Name),
+                       To_String (Pkg_Version));
                   declare
                      Out_File : constant String :=
                        To_String (Output_Path);
@@ -556,12 +630,19 @@ package body SCIP_Ada.CLI is
 
                --  Emit SCIP index without enrichment
                declare
+                  No_Enrich : SCIP_Ada.SCIP.Emitter.Enrichment_Map :=
+                    Empty_Enrichment;
                   Out_File : constant String := To_String (Output_Path);
                   Root     : constant String :=
                     To_String (Info.Project_Root);
                   Valid    : ALI_File_Array (1 .. Parse_Count);
                   V_Idx   : Natural := 0;
                begin
+                  No_Enrich.Pkg_Context :=
+                    SCIP_Ada.SCIP.Symbols.Make_Context
+                      (To_String (Pkg_Manager),
+                       To_String (Pkg_Name),
+                       To_String (Pkg_Version));
                   for Idx in Parsed'Range loop
                      if not Parsed (Idx).Files.Is_Empty then
                         V_Idx := V_Idx + 1;
@@ -575,7 +656,7 @@ package body SCIP_Ada.CLI is
                     (ALI_Files    => Valid (1 .. V_Idx),
                      Output_Path  => Out_File,
                      Project_Root => Root,
-                     Enrichment   => Empty_Enrichment,
+                     Enrichment   => No_Enrich,
                      Source_Dirs  => Info.Source_Dirs);
                end;
             end if;

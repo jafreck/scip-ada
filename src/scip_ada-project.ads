@@ -21,10 +21,12 @@ package SCIP_Ada.Project is
    ---------------------------------------------------------------------------
 
    type Project_Info is record
-      Project_Name : Unbounded_String;
-      Project_Root : Unbounded_String;   --  absolute path to project root
-      Source_Dirs  : String_Vectors.Vector;  --  absolute paths
-      ALI_Files    : String_Vectors.Vector;  --  absolute paths to .ali files
+      Project_Name  : Unbounded_String;
+      Project_Root  : Unbounded_String;   --  absolute path to project root
+      Source_Dirs   : String_Vectors.Vector;  --  absolute paths
+      ALI_Files     : String_Vectors.Vector;  --  absolute paths to .ali files
+      Alire_Name    : Unbounded_String;  --  from alire.toml name field
+      Alire_Version : Unbounded_String;  --  from alire.toml version field
    end record;
 
    ---------------------------------------------------------------------------

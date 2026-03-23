@@ -333,6 +333,60 @@ package body SCIP_Ada.Project is
    end Find_File_Recursive;
 
    ---------------------------------------------------------------------------
+   --  Parse_Alire_Toml — extract name and version from alire.toml
+   ---------------------------------------------------------------------------
+
+   procedure Parse_Alire_Toml
+     (Dir          : String;
+      Alire_Name   : out Unbounded_String;
+      Alire_Version : out Unbounded_String)
+   is
+      use Ada.Text_IO;
+      Path : constant String := Dir & "/alire.toml";
+      File : File_Type;
+   begin
+      Alire_Name    := Null_Unbounded_String;
+      Alire_Version := Null_Unbounded_String;
+
+      if not Exists (Path) then
+         return;
+      end if;
+
+      Open (File, In_File, Path);
+      while not End_Of_File (File) loop
+         declare
+            Raw : constant String := Get_Line (File);
+            Line : constant String := Strip (Raw);
+            Low  : constant String := To_Lower (Line);
+         begin
+            --  Match: name = "..." or version = "..."
+            if Low'Length > 7
+              and then Low (Low'First .. Low'First + 6) = "name = "
+            then
+               declare
+                  Val : constant String := Extract_Quoted (Line);
+               begin
+                  if Val'Length > 0 then
+                     Alire_Name := To_Unbounded_String (Val);
+                  end if;
+               end;
+            elsif Low'Length > 10
+              and then Low (Low'First .. Low'First + 9) = "version = "
+            then
+               declare
+                  Val : constant String := Extract_Quoted (Line);
+               begin
+                  if Val'Length > 0 then
+                     Alire_Version := To_Unbounded_String (Val);
+                  end if;
+               end;
+            end if;
+         end;
+      end loop;
+      Close (File);
+   end Parse_Alire_Toml;
+
+   ---------------------------------------------------------------------------
    --  Discover_From_GPR
    ---------------------------------------------------------------------------
 
@@ -374,6 +428,9 @@ package body SCIP_Ada.Project is
          Sort.Sort (Info.ALI_Files);
       end;
 
+      --  Check for alire.toml in project root
+      Parse_Alire_Toml (GPR_Dir, Info.Alire_Name, Info.Alire_Version);
+
       return Info;
    end Discover_From_GPR;
 
@@ -398,6 +455,9 @@ package body SCIP_Ada.Project is
       begin
          Sort.Sort (Info.ALI_Files);
       end;
+
+      --  Check for alire.toml in directory root
+      Parse_Alire_Toml (Abs_Dir, Info.Alire_Name, Info.Alire_Version);
 
       return Info;
    end Discover_From_Directory;

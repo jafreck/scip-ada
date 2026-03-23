@@ -3,7 +3,6 @@ with Ada.Strings.Fixed;
 with Ada.Directories;
 with Ada.Containers.Vectors;
 with SCIP_Ada.SCIP.Protobuf;
-with SCIP_Ada.SCIP.Symbols;
 with SCIP_Ada.SCIP.Mapping;
 
 package body SCIP_Ada.SCIP.Emitter is
@@ -34,7 +33,9 @@ package body SCIP_Ada.SCIP.Emitter is
          Kind_Overrides          =>
            Kind_Override_Maps.Empty_Map,
          Display_Name_Overrides  =>
-           Signature_Maps.Empty_Map);
+           Signature_Maps.Empty_Map,
+         Pkg_Context            =>
+           Symbols.Make_Context (".", ".", "."));
    end Empty_Enrichment;
 
    procedure Add_Signature
@@ -229,11 +230,21 @@ package body SCIP_Ada.SCIP.Emitter is
       return Occ;
    end Encode_Occurrence;
 
+   function Encode_Signature_Documentation
+     (Signature : String) return Byte_Buffer
+   is
+      Doc : Byte_Buffer;
+   begin
+      Encode_String_Field (Doc, Document_Language_Field, "ada");
+      Encode_String_Field (Doc, Document_Text_Field, Signature);
+      return Doc;
+   end Encode_Signature_Documentation;
+
    function Encode_Symbol_Info
      (Symbol_Str    : String;
       Kind          : Mapping.SCIP_Symbol_Kind;
       Display_Name  : String;
-      Documentation : String := "";
+      Signature     : String := "";
       Doc_Comment   : String := "";
       Kind_Override : Integer := -1;
       Display_Name_Override : String := "") return Byte_Buffer
@@ -246,13 +257,19 @@ package body SCIP_Ada.SCIP.Emitter is
          else Display_Name);
    begin
       Encode_String_Field (SI, Symbol_Info_Symbol_Field, Symbol_Str);
-      if Documentation'Length > 0 then
-         --  documentation is field 3, repeated string — signature first
-         Encode_String_Field
-           (SI, Symbol_Info_Documentation_Field, Documentation);
+      if Signature'Length > 0 then
+         declare
+            Sig_Doc : constant Byte_Buffer :=
+              Encode_Signature_Documentation (Signature);
+         begin
+            Encode_Submessage_Field
+              (SI,
+               Symbol_Info_Signature_Documentation_Field,
+               Sig_Doc);
+         end;
       end if;
       if Doc_Comment'Length > 0 then
-         --  doc comment as additional documentation entry
+         --  Non-code documentation belongs in the documentation array.
          Encode_String_Field
            (SI, Symbol_Info_Documentation_Field, Doc_Comment);
       end if;
@@ -446,11 +463,7 @@ package body SCIP_Ada.SCIP.Emitter is
       Enrichment   : Enrichment_Map)
    is
       pragma Unreferenced (Project_Root);
-      Ctx : constant Symbols.Symbol_Context :=
-        Symbols.Make_Context
-          (Manager      => ".",
-           Package_Name => ".",
-           Version      => ".");
+      Ctx : constant Symbols.Symbol_Context := Enrichment.Pkg_Context;
    begin
       for File_Idx in 1 .. Integer (ALI_Data.Files.Length) loop
          declare
@@ -637,11 +650,7 @@ package body SCIP_Ada.SCIP.Emitter is
       Seen_Docs     : Signature_Maps.Map;
       Seen_External : Signature_Maps.Map;
 
-      Ctx : constant Symbols.Symbol_Context :=
-        Symbols.Make_Context
-          (Manager      => ".",
-           Package_Name => ".",
-           Version      => ".");
+      Ctx : constant Symbols.Symbol_Context := Enrichment.Pkg_Context;
 
       --  Return the resolved relative path for file index FI
       --  inside ALI file A, or "" if FI is out of range.

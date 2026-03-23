@@ -13,6 +13,8 @@ package Test_SCIP_Emitter is
        (T : in out SCIP_Ada.Tests.Fixture);
     procedure Test_Output_Contains_Entity_Name
        (T : in out SCIP_Ada.Tests.Fixture);
+    procedure Test_Enriched_Output_Uses_Signature_Documentation
+       (T : in out SCIP_Ada.Tests.Fixture);
     procedure Test_Emit_Empty_ALI_Creates_Output
        (T : in out SCIP_Ada.Tests.Fixture);
 end Test_SCIP_Emitter;

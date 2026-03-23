@@ -122,6 +122,12 @@ package body SCIP_Ada.Tests.Suite is
 
          Result.Add_Test
         (Caller.Create
+           ("SCIP Emitter Signature Documentation",
+            Test_SCIP_Emitter
+              .Test_Enriched_Output_Uses_Signature_Documentation'Access));
+
+         Result.Add_Test
+        (Caller.Create
            ("SCIP Emitter Empty ALI",
             Test_SCIP_Emitter.Test_Emit_Empty_ALI_Creates_Output'Access));
 
