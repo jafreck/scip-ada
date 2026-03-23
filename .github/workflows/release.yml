@@ -99,3 +99,23 @@ jobs:
           name: scip-ada ${{ steps.version.outputs.version }}
           generate_release_notes: true
           files: release/*
+
+  publish-alire:
+    needs: release
+    runs-on: ubuntu-latest
+    name: Publish to Alire
+    if: ${{ !contains(github.ref_name, '-') }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Install Alire
+        uses: alire-project/setup-alire@v4
+
+      - name: Publish to Alire community index
+        run: alr publish --skip-build
+        env:
+          GH_TOKEN: ${{ secrets.ALIRE_PUBLISH_TOKEN }}
