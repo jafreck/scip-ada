@@ -5,19 +5,51 @@ package body SCIP_Ada.SCIP.Symbols is
    use SCIP_Ada.ALI.Types;
 
    ---------------------------------------------------------------------------
-   --  Escape_Name — escape spaces in a SCIP symbol component
+   --  Escape_Space — double-space escape for manager/package/version fields
    ---------------------------------------------------------------------------
 
-   function Escape_Name (Name : String) return String is
+   function Escape_Space (Value : String) return String is
       Result : Unbounded_String;
    begin
-      for C of Name loop
+      for C of Value loop
          if C = ' ' then
-            Append (Result, "  ");  --  double-space escape
+            Append (Result, "  ");
          else
             Append (Result, C);
          end if;
       end loop;
+      return To_String (Result);
+   end Escape_Space;
+
+   ---------------------------------------------------------------------------
+   --  Escape_Name — backtick-wrap descriptor names with special characters
+   ---------------------------------------------------------------------------
+
+   function Needs_Backtick_Escape (Name : String) return Boolean is
+   begin
+      for C of Name loop
+         if not (C in 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_') then
+            return True;
+         end if;
+      end loop;
+      return False;
+   end Needs_Backtick_Escape;
+
+   function Escape_Name (Name : String) return String is
+      Result : Unbounded_String;
+   begin
+      if not Needs_Backtick_Escape (Name) then
+         return Name;
+      end if;
+      Append (Result, '`');
+      for C of Name loop
+         if C = '`' then
+            Append (Result, "``");
+         else
+            Append (Result, C);
+         end if;
+      end loop;
+      Append (Result, '`');
       return To_String (Result);
    end Escape_Name;
 
@@ -169,11 +201,11 @@ package body SCIP_Ada.SCIP.Symbols is
    begin
       Append (Result, Scheme);
       Append (Result, " ");
-      Append (Result, Escape_Name (To_String (Context.Manager)));
+      Append (Result, Escape_Space (To_String (Context.Manager)));
       Append (Result, " ");
-      Append (Result, Escape_Name (To_String (Context.Package_Name)));
+      Append (Result, Escape_Space (To_String (Context.Package_Name)));
       Append (Result, " ");
-      Append (Result, Escape_Name (To_String (Context.Version)));
+      Append (Result, Escape_Space (To_String (Context.Version)));
       Append (Result, " ");
 
       for D of Descriptors loop
