@@ -22,3 +22,10 @@ tests/fixtures/*/bin/
 tests/fixtures/*/lib/
 tests/fixtures/*/index.scip
 tests/fixtures/*/snapshot_new/
+
+# Un-ignore unit test fixture data
+!tests/fixtures/*.ali
+!tests/fixtures/project_fixture/obj/
+!tests/fixtures/project_fixture/obj/*.ali
+!tests/fixtures/project_fixture/lib/
+!tests/fixtures/project_fixture/lib/*.ads

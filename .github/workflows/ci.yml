@@ -29,10 +29,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Alire
-        uses: alire-project/setup-alire@v4
+        uses: alire-project/setup-alire@v5
 
-      - name: Build
-        run: alr build
+      - name: Build (no LAL)
+        run: alr -n build -- -XENRICH=no
 
       - name: Verify --help (Unix)
         if: runner.os != 'Windows'

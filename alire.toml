@@ -13,5 +13,3 @@ executables = ["scip_ada"]
 [[depends-on]]
 aunit = "^26.0.0"
 
-[[depends-on]]
-libadalang = "*"

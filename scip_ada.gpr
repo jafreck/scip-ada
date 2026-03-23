@@ -1,5 +1,4 @@
 with "config/scip_ada_config.gpr";
-with "libadalang.gpr";
 project Scip_Ada is
 
    type Enrich_Mode is ("yes", "no");
@@ -36,13 +35,10 @@ project Scip_Ada is
    end Binder;
 
    package Linker is
-      for Switches ("Ada") use
-        ("-lgnarl", "-Wno-overriding-deployment-version");
+      for Switches ("Ada") use ("-lgnarl");
       case Scip_Ada_Config.Build_Profile is
          when "release" =>
-            for Switches ("Ada") use
-              ("-lgnarl", "-static",
-               "-Wno-overriding-deployment-version");
+            for Switches ("Ada") use ("-lgnarl", "-static");
          when others =>
             null;
       end case;

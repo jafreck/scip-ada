@@ -22,8 +22,7 @@ project Scip_Ada_Tests is
    end Binder;
 
    package Linker is
-      for Default_Switches ("Ada") use
-        ("-Wno-overriding-deployment-version");
+      for Default_Switches ("Ada") use ();
    end Linker;
 
 end Scip_Ada_Tests;

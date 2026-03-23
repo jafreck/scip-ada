@@ -1,0 +1,124 @@
+V "GNAT Lib v15"
+A -gnatws
+A -mmacosx-version-min=16.0.0
+A -mcpu=apple-m1
+A -mlittle-endian
+A -mabi=lp64
+A -fPIC
+P SS ZX
+
+RN
+RV NO_DISPATCHING_CALLS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+
+U sample%b		sample.adb		0a2fb4dc OO PK
+W ada%s			ada.ads			ada.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+
+U sample%s		sample.ads		d5315d64 BN EE OO PF PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.streams%s		a-stream.adb		a-stream.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+Z system%s		system.ads		system.ali
+Z system.put_images%s	s-putima.adb		s-putima.ali
+Z system.return_stack%s	s-retsta.ads		s-retsta.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+
+D ada.ads		20250419085653 76789da1 ada%s
+D a-except.ads		20250419085653 e7970cd9 ada.exceptions%s
+D a-ioexce.ads		20250419085653 40018c65 ada.io_exceptions%s
+D a-stream.ads		20250419085653 17477cbd ada.streams%s
+D a-string.ads		20250419085653 90ac6797 ada.strings%s
+D a-sttebu.ads		20250419085653 f1ad67a2 ada.strings.text_buffers%s
+D a-stuten.ads		20250419085653 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20250419085653 fbca0ad5 ada.tags%s
+D a-textio.ads		20250419085653 34ef47de ada.text_io%s
+D a-unccon.ads		20250419085653 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20250419085653 9111f9c1 interfaces%s
+D i-cstrea.ads		20250419085653 ffd01b9d interfaces.c_streams%s
+D sample.ads		20260322034400 d5315d64 sample%s
+D sample.adb		20260322034407 ebf1ae66 sample%b
+D system.ads		20250419085653 70765b54 system%s
+D s-crtl.ads		20250419085653 beb39b9e system.crtl%s
+D s-exctab.ads		20250419085653 91bef6ef system.exception_table%s
+D s-ficobl.ads		20250419085653 dc5161d4 system.file_control_block%s
+D s-parame.ads		20250419085653 3597fc11 system.parameters%s
+D s-putima.ads		20250419085653 17291fe4 system.put_images%s
+D s-retsta.ads		20250419085653 0f6b06cb system.return_stack%s
+D s-secsta.ads		20250419085653 578279f5 system.secondary_stack%s
+D s-soflin.ads		20250419085653 5d88fdea system.soft_links%s
+D s-stache.ads		20250419085653 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20250419085653 1c9580f6 system.standard_library%s
+D s-stoele.ads		20250419085653 ccded4e8 system.storage_elements%s
+D s-stratt.ads		20250419085653 516607ae system.stream_attributes%s
+D s-traent.ads		20250419085653 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20250419085653 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20250419085653 d9032363 system.wch_con%s
+G a e
+G c Z s b [area sample 14 13 none]
+G c Z s b [draw sample 15 14 none]
+G c Z s s [pointIP sample 5 9 none]
+G c Z s s [shapeDA sample 10 9 none]
+G c Z s s [shapeDF sample 10 9 none]
+G c Z s s [shapeIP sample 10 9 none]
+G c Z s b [area sample 21 24 none]
+G c Z s b [draw sample 22 25 none]
+G c Z s b [Oadd sample 33 13 none]
+G c Z s s [circleDA sample 17 9 none]
+G c Z s s [circleDF sample 17 9 none]
+G c Z s s [circleIP sample 17 9 none]
+G c Z s s [int_arrayIP sample 37 9 none]
+X 1 ada.ads
+18K9*Ada 22e8 14|1r6 14r7 25r7
+X 9 a-textio.ads
+58K13*Text_IO 785e16 14|1w10 14r11 25r11
+565U14*Put_Line 14|14s19 25s19
+X 13 sample.ads
+1K9*Sample 43l5 43e11 14|3b14 56l5 56t11
+3E9*Color 3e36 41r20
+3n19*Red{3E9} 41r29
+3n24*Green{3E9}
+3n31*Blue{3E9}
+5R9*Point 8e14 11r16 33r25 33r39 35r26 14|51r25 51r39
+6i7*X{integer} 35m36 14|53m15 53r22 53r28
+7i7*Y{integer} 35m44 14|53m31 53r38 53r44
+10R9*Shape 12e14 14p13 14r23 15p14 15r24 17r23 14|5r23 11r24
+11r7*Origin{5R9}
+14V13*Area{float} 14>19 14|5b13 9l8 9t12
+14r19 S{10R9} 14|5b19 6r28
+15U14*Draw 15>20 14|11b14 15l8 15t12
+15r20 S{10R9} 14|11b20 12r28
+17R9*Circle<10R9> 19e14 21P24 21r34 22P25 22r35 14|17r34 22r35
+18f7*Radius{float} 14|19r26 19r37
+21V24*Area{float}<14p13> 21>30 14|17b24 20l8 20t12
+21r30 C{17R9} 14|17b30 19r24 19r35
+22U25*Draw<15p14> 22>31 14|22b25 26l8 26t12
+22r31 C{17R9} 14|22b31 23r28
+25+12 Element_Type 28r30 29r27 14|29r36 32r30 38r27 39r28
+26i7 Size{positive} 14|29r27
+27k12*Bounded_Stack 25z12 26z7 31l8 31e21 14|28b17 49l8 49t21
+28U17*Push 28>23 14|32b17 36l11 36t15
+28*23 Item{25+12} 14|32b23 35r25
+29V16*Pop{25+12} 14|38b16 43l11 43t14
+30V16*Is_Empty{boolean} 14|45b16 48l11 48t19
+33V14*"+"{5R9} 33>18 33>21 14|51b14 54l9 54t11
+33r18 L{5R9} 14|51b18 53r20 53r36
+33r21 R{5R9} 14|51b21 53r26 53r42
+35r4*Null_Point{5R9}
+37A9*Int_Array(integer)<integer>
+39I12*Small_Int{integer}
+41e4*Default_Color{3E9}
+X 14 sample.adb
+29a7 Stack(13|25+12) 35m10 39r44
+30i7 Top{natural} 34m10 34r17 35r17 39r51 41m10 41r17 47r17
+39*10 Result{13|25+12} 42r17
+
