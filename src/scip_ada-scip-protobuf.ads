@@ -112,6 +112,7 @@ package SCIP_Ada.SCIP.Protobuf is
    Document_Relative_Path_Field  : constant := 1;
    Document_Occurrences_Field    : constant := 2;
    Document_Symbols_Field        : constant := 3;
+   Document_Text_Field           : constant := 5;
 
    --  Occurrence message
    Occurrence_Range_Field                : constant := 1;
@@ -127,6 +128,7 @@ package SCIP_Ada.SCIP.Protobuf is
    Symbol_Info_Relationships_Field  : constant := 4;
    Symbol_Info_Kind_Field           : constant := 5;
    Symbol_Info_Display_Name_Field   : constant := 6;
+   Symbol_Info_Signature_Documentation_Field : constant := 7;
 
    --  Relationship message
    Relationship_Symbol_Field    : constant := 1;
