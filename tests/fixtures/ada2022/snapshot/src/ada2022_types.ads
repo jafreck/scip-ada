@@ -1,181 +1,192 @@
   --  Ada 2022 Types — types and contracts for Ada 2022 feature testing
   
   package Ada2022_Types is
-//        ^^^^^^^^^^^^^ definition scip-ada . . . Ada2022_Types/
+//        ^^^^^^^^^^^^^ definition scip-ada . Ada2022 . Ada2022_Types/
 //        kind Namespace
   
      --  Basic record type for delta aggregates
-//             ^^^^^ reference scip-ada . . . Value#
+//             ^^^^^ reference scip-ada . Ada2022 . Value#
      type Point is record
-//       ^^^^^^^^ reference scip-ada . . . Is_Valid().
-//        ^^^^^ definition scip-ada . . . Point#
+//       ^^^^^^^^ reference scip-ada . Ada2022 . Is_Valid().
+//        ^^^^^ definition scip-ada . Ada2022 . Point#
 //        kind Class
-//               ^^^^^^^^ reference scip-ada . . . Is_Valid().
+//        documentation
+//        > Basic record type for delta aggregates
+//               ^^^^^^^^ reference scip-ada . Ada2022 . Is_Valid().
         X : Integer := 0;
-//      ^ definition scip-ada . . . X.
+//      ^ definition scip-ada . Ada2022 . X.
 //      kind Variable
         Y : Integer := 0;
-//      ^ definition scip-ada . . . Y.
+//      ^ definition scip-ada . Ada2022 . Y.
 //      kind Variable
-//                                       ^^^^^^^^^^^^ reference scip-ada . . . Positive_Int#
+//                                       ^^^^^^^^^^^^ reference scip-ada . Ada2022 . Positive_Int#
      end record;
-//             ^^^^^ reference scip-ada . . . Point#
+//             ^^^^^ reference scip-ada . Ada2022 . Point#
   
-//              ^^^^^ reference scip-ada . . . Value.
-//                       ^ reference scip-ada . . . V.
+//              ^^^^^ reference scip-ada . Ada2022 . Value.
+//                       ^ reference scip-ada . Ada2022 . V.
      --  Record with more fields for aggregate testing
-//       ^^^^ reference scip-ada . . . Make().
-//           ^^^^ reference scip-ada . . . Make().
-//                        ^^^^^^^^^^^^^ reference scip-ada . . . Ada2022_Types/
+//       ^^^^ reference scip-ada . Ada2022 . Make().
+//           ^^^^ reference scip-ada . Ada2022 . Make().
+//                        ^^^^^^^^^^^^^ reference scip-ada . Ada2022 . Ada2022_Types/
      type Color is record
-//        ^^^^^ definition scip-ada . . . Color#
+//        ^^^^^ definition scip-ada . Ada2022 . Color#
 //        kind Class
+//        documentation
+//        > Record with more fields for aggregate testing
         R : Integer := 0;
-//      ^ definition scip-ada . . . R.
+//      ^ definition scip-ada . Ada2022 . R.
 //      kind Variable
-//                         ^^^^^^^^^^^^ reference scip-ada . . . Positive_Int#
+//                         ^^^^^^^^^^^^ reference scip-ada . Ada2022 . Positive_Int#
         G : Integer := 0;
-//      ^ definition scip-ada . . . G.
+//      ^ definition scip-ada . Ada2022 . G.
 //      kind Variable
         B : Integer := 0;
-//      ^ definition scip-ada . . . B.
+//      ^ definition scip-ada . Ada2022 . B.
 //      kind Variable
-//             ^^^^^ reference scip-ada . . . Value#
-//                   ^^^^^ reference scip-ada . . . Value.
+//             ^^^^^ reference scip-ada . Ada2022 . Value#
+//                   ^^^^^ reference scip-ada . Ada2022 . Value.
         A : Integer := 255;
-//      ^ definition scip-ada . . . A.
+//      ^ definition scip-ada . Ada2022 . A.
 //      kind Variable
-//       ^^^ reference scip-ada . . . Get().
-//          ^^^ reference scip-ada . . . Get().
+//       ^^^ reference scip-ada . Ada2022 . Get().
+//          ^^^ reference scip-ada . Ada2022 . Get().
      end record;
-//             ^^^^^ reference scip-ada . . . Color#
+//             ^^^^^ reference scip-ada . Ada2022 . Color#
   
      --  Array types for iterated component associations
-//                           ^ reference scip-ada . . . S#
+//                           ^ reference scip-ada . Ada2022 . S#
      type Int_Array is array (Positive range <>) of Integer;
-//        ^^^^^^^^^^^^^^^^^^ definition scip-ada . . . Int_Array(integer)#
+//        ^^^^^^^^^^^^^^^^^^ definition scip-ada . Ada2022 . `Int_Array(integer)`#
 //        kind Type
+//        documentation
+//        > Array types for iterated component associations
      type Fixed_Array is array (1 .. 5) of Integer;
-//        ^^^^^ reference scip-ada . . . Point#
-//        ^^^^^^^^^^^^^^^^^^^^ definition scip-ada . . . Fixed_Array(integer)#
+//        ^^^^^ reference scip-ada . Ada2022 . Point#
+//        ^^^^^^^^^^^^^^^^^^^^ definition scip-ada . Ada2022 . `Fixed_Array(integer)`#
 //        kind Type
      type Matrix is array (1 .. 3, 1 .. 3) of Integer;
-//       ^^^^ reference scip-ada . . . Area().
-//        ^^^^^^^^^^^^^^^ definition scip-ada . . . Matrix(integer)#
+//       ^^^^ reference scip-ada . Ada2022 . Area().
+//        ^^^^^^^^^^^^^^^ definition scip-ada . Ada2022 . `Matrix(integer)`#
 //        kind Type
-//           ^^^^ reference scip-ada . . . Area().
+//           ^^^^ reference scip-ada . Ada2022 . Area().
   
      --  Type with Default_Initial_Condition (Ada 2022 contract aspect)
-//                 ^^^^^ reference scip-ada . . . Point#
+//                 ^^^^^ reference scip-ada . Ada2022 . Point#
      type Positive_Int is private
-//        ^^^^^^^^^^^^ definition scip-ada . . . Positive_Int#
+//        ^^^^^^^^^^^^ definition scip-ada . Ada2022 . Positive_Int#
 //        kind Class
+//        documentation
+//        > Type with Default_Initial_Condition (Ada 2022 contract aspect)
        with Default_Initial_Condition => Is_Valid (Positive_Int);
-//                       ^ reference scip-ada . . . S#
-//                                  ^ reference scip-ada . . . S#
-//                                    ^^^^^^ reference scip-ada . . . Radius.
-//                                       ^^^^^^^^ reference scip-ada . . . Is_Valid().
+//                       ^ reference scip-ada . Ada2022 . S#
+//                                  ^ reference scip-ada . Ada2022 . S#
+//                                    ^^^^^^ reference scip-ada . Ada2022 . Radius.
+//                                       ^^^^^^^^ reference scip-ada . Ada2022 . Is_Valid().
   
-//       ^^^^ reference scip-ada . . . Area().
-//           ^^^^ reference scip-ada . . . Area().
+//       ^^^^ reference scip-ada . Ada2022 . Area().
+//           ^^^^ reference scip-ada . Ada2022 . Area().
      function Is_Valid (Value : Positive_Int) return Boolean;
-//            ^^^^^^^^ definition scip-ada . . . Is_Valid().
+//            ^^^^^^^^ definition scip-ada . Ada2022 . Is_Valid().
 //            kind Function
-//            documentation
-//            > function Is_Valid (Value : Positive_Int) return Boolean
-//                      ^^^^^ definition scip-ada . . . Value#
+//                      ^^^^^ definition scip-ada . Ada2022 . Value#
 //                      kind Struct
-//                      documentation
-//                      > function Is_Valid (Value : Positive_Int) return Boolean
-//                         ^^^^^ reference scip-ada . . . Color#
-//                              ^^^^^^^^^^^^ reference scip-ada . . . Positive_Int#
+//                         ^^^^^ reference scip-ada . Ada2022 . Color#
+//                              ^^^^^^^^^^^^ reference scip-ada . Ada2022 . Positive_Int#
      function Make (V : Positive) return Positive_Int;
-//    ^^^^^^^^^^^^^ reference scip-ada . . . Ada2022_Types/
-//            ^^^^ definition scip-ada . . . Make().
+//    ^^^^^^^^^^^^^ reference scip-ada . Ada2022 . Ada2022_Types/
+//            ^^^^ definition scip-ada . Ada2022 . Make().
 //            kind Function
-//            documentation
-//            > function Make (V : Positive) return Positive_Int
-//                 ^^^^^^^^^^^^^ reference scip-ada . . . Ada2022_Types/
-//                  ^ definition scip-ada . . . V.
+//                 ^^^^^^^^^^^^^ reference scip-ada . Ada2022 . Ada2022_Types/
+//                  ^ definition scip-ada . Ada2022 . V.
 //                  kind Variable
-//                  documentation
-//                  > function Make (V : Positive) return Positive_Int
-//                                       ^^^^^^^^^^^^ reference scip-ada . . . Positive_Int#
+//                                       ^^^^^^^^^^^^ reference scip-ada . Ada2022 . Positive_Int#
      function Get (Value : Positive_Int) return Positive;
-//            ^^^ definition scip-ada . . . Get().
+//            ^^^ definition scip-ada . Ada2022 . Get().
 //            kind Function
-//            documentation
-//            > function Get (Value : Positive_Int) return Positive
-//                         ^^^^^^^^^^^^ reference scip-ada . . . Positive_Int#
+//                         ^^^^^^^^^^^^ reference scip-ada . Ada2022 . Positive_Int#
   
      --  Tagged type for class-wide / extension testing
      type Shape is tagged record
-//        ^^^^^ definition scip-ada . . . Shape#
+//        ^^^^^ definition scip-ada . Ada2022 . Shape#
 //        kind Class
+//        documentation
+//        > Tagged type for class-wide / extension testing
         Name : String (1 .. 10) := (others => ' ');
-//      ^^^^ definition scip-ada . . . Name.
+//      ^^^^ definition scip-ada . Ada2022 . Name.
 //      kind Variable
      end record;
-//             ^^^^^ reference scip-ada . . . Shape#
+//             ^^^^^ reference scip-ada . Ada2022 . Shape#
   
      function Area (S : Shape) return Float;
-//            ^^^^ definition scip-ada . . . Area().
+//            ^^^^ definition scip-ada . Ada2022 . Area().
 //            kind Function
-//            documentation
-//            > function Area (S : Shape) return Float
-//            ^^^^^ reference scip-ada . . . Shape#
-//                  ^ definition scip-ada . . . S#
+//            ^^^^^ reference scip-ada . Ada2022 . Shape#
+//                  ^ definition scip-ada . Ada2022 . S#
 //                  kind Struct
-//                  documentation
-//                  > function Area (S : Shape) return Float
-//                      ^^^^^ reference scip-ada . . . Shape#
+//                      ^^^^^ reference scip-ada . Ada2022 . Shape#
   
-//                      ^^^^^^^^^^^^^^^^^^^^ reference scip-ada . . . Fixed_Array(integer)#
+//                      ^^^^^^^^^^^^^^^^^^^^ reference scip-ada . Ada2022 . `Fixed_Array(integer)`#
      type Circle is new Shape with record
-//        ^^^^^^ definition scip-ada . . . Circle#
+//        ^^^^^^ definition scip-ada . Ada2022 . Circle#
 //        kind Class
-//                      ^^^^^ reference scip-ada . . . Shape#
+//        relationship scip-ada . Ada2022 . Ada2022_Types#Shape# type_definition
+//                      ^^^^^ reference scip-ada . Ada2022 . Shape#
         Radius : Float := 0.0;
-//      ^^^^^^ definition scip-ada . . . Radius.
+//      ^^^^^^ definition scip-ada . Ada2022 . Radius.
 //      kind Variable
      end record;
-//             ^^^^^^ reference scip-ada . . . Circle#
+//             ^^^^^^ reference scip-ada . Ada2022 . Circle#
   
      overriding function Area (S : Circle) return Float;
-//                       ^^^^^^ reference scip-ada . . . Circle#
-//                                 ^^^^^^ reference scip-ada . . . Circle#
+//                       ^^^^^^ reference scip-ada . Ada2022 . Circle#
+//                                 ^^^^^^ reference scip-ada . Ada2022 . Circle#
   
      --  Enumeration for various tests
      type Direction is (North, South, East, West);
-//        ^^^^^^^^^ definition scip-ada . . . Direction#
+//        ^^^^^^^^^ definition scip-ada . Ada2022 . Direction#
 //        kind Enum
-//                      ^^^^^ definition scip-ada . . . North.
+//        documentation
+//        > Enumeration for various tests
+//                      ^^^^^ definition scip-ada . Ada2022 . North.
 //                      kind EnumMember
-//                             ^^^^^ definition scip-ada . . . South.
+//                      documentation
+//                      > Enumeration for various tests
+//                             ^^^^^ definition scip-ada . Ada2022 . South.
 //                             kind EnumMember
-//                                    ^^^^ definition scip-ada . . . East.
+//                             documentation
+//                             > Enumeration for various tests
+//                                    ^^^^ definition scip-ada . Ada2022 . East.
 //                                    kind EnumMember
-//                                          ^^^^ definition scip-ada . . . West.
+//                                    documentation
+//                                    > Enumeration for various tests
+//                                          ^^^^ definition scip-ada . Ada2022 . West.
 //                                          kind EnumMember
-//                                               ^^^^^^^^^ reference scip-ada . . . Direction#
+//                                          documentation
+//                                          > Enumeration for various tests
+//                                               ^^^^^^^^^ reference scip-ada . Ada2022 . Direction#
   
      --  Access type
      type Int_Access is access all Integer;
-//        ^^^^^^^^^^^^^^^^^^^ definition scip-ada . . . Int_Access(integer)#
+//        ^^^^^^^^^^^^^^^^^^^ definition scip-ada . Ada2022 . `Int_Access(integer)`#
 //        kind Type
+//        documentation
+//        > Access type
   
   private
      type Positive_Int is record
-//        ^^^^^^^^^^^^ definition scip-ada . . . Positive_Int#
+//        ^^^^^^^^^^^^ definition scip-ada . Ada2022 . Positive_Int#
 //        kind Class
-//        ^^^^^^^^^^^^^ reference scip-ada . . . Ada2022_Types/
+//        documentation
+//        > Type with Default_Initial_Condition (Ada 2022 contract aspect)
+//        ^^^^^^^^^^^^^ reference scip-ada . Ada2022 . Ada2022_Types/
         Value : Positive := 1;
-//      ^^^^^ definition scip-ada . . . Value.
+//      ^^^^^ definition scip-ada . Ada2022 . Value.
 //      kind Variable
      end record;
-//             ^^^^^^^^^^^^ reference scip-ada . . . Positive_Int#
+//             ^^^^^^^^^^^^ reference scip-ada . Ada2022 . Positive_Int#
   
   end Ada2022_Types;
-//    ^^^^^^^^^^^^^ reference scip-ada . . . Ada2022_Types/
-//                 ^^^^^^^^^^^^^ reference scip-ada . . . Ada2022_Types/
+//    ^^^^^^^^^^^^^ reference scip-ada . Ada2022 . Ada2022_Types/
+//                 ^^^^^^^^^^^^^ reference scip-ada . Ada2022 . Ada2022_Types/
   

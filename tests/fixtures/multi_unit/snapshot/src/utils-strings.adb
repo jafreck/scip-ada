@@ -1,16 +1,16 @@
   package body Utils.Strings is
-//             ^^^^^ reference scip-ada . . . Utils/
-//                   ^^^^^^^ definition scip-ada . . . Strings/
+//             ^^^^^ reference scip-ada . Multi_Unit . Utils/
+//                   ^^^^^^^ definition scip-ada . Multi_Unit . Strings/
      function Repeat_Char (C : Character; Count : Natural) return String is
-//            ^^^^^^^^^^^ definition scip-ada . . . Repeat_Char().
-//                         ^ definition scip-ada . . . C.
-//                                        ^^^^^ definition scip-ada . . . Count.
+//            ^^^^^^^^^^^ definition scip-ada . Multi_Unit . Repeat_Char().
+//                         ^ definition scip-ada . Multi_Unit . C.
+//                                        ^^^^^ definition scip-ada . Multi_Unit . Count.
         Result : String (1 .. Count) := (others => C);
-//      ^^^^^^ definition scip-ada . . . Result.
+//      ^^^^^^ definition scip-ada . Multi_Unit . Result.
 //      kind Variable
      begin
         return Result;
-//             ^^^^^^ reference scip-ada . . . Result.
+//             ^^^^^^ reference scip-ada . Multi_Unit . Result.
      end Repeat_Char;
   end Utils.Strings;
   

@@ -1,16 +1,16 @@
   package body Utils is
-//             ^^^^^ definition scip-ada . . . Utils/
+//             ^^^^^ definition scip-ada . Multi_Unit . Utils/
      function Add (X, Y : Integer) return Integer is
-//            ^^^ definition scip-ada . . . Add().
-//                 ^ definition scip-ada . . . X.
-//                    ^ definition scip-ada . . . Y.
+//            ^^^ definition scip-ada . Multi_Unit . Add().
+//                 ^ definition scip-ada . Multi_Unit . X.
+//                    ^ definition scip-ada . Multi_Unit . Y.
      begin
         return X + Y;
      end Add;
   
      function Factorial (N : Natural) return Positive is
-//            ^^^^^^^^^ definition scip-ada . . . Factorial().
-//                       ^ definition scip-ada . . . N.
+//            ^^^^^^^^^ definition scip-ada . Multi_Unit . Factorial().
+//                       ^ definition scip-ada . Multi_Unit . N.
      begin
         if N <= 1 then
            return 1;

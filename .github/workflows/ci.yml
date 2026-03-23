@@ -56,3 +56,18 @@ jobs:
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
         run: .\bin\test_runner.exe
+
+      - name: Install scip CLI
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p "$HOME/bin"
+          SCIP_VERSION="v0.5.1"
+          curl -fsSL "https://github.com/sourcegraph/scip/releases/download/${SCIP_VERSION}/scip-linux-amd64.tar.gz" \
+            | tar xz -C "$HOME/bin"
+          chmod +x "$HOME/bin/scip"
+
+      - name: Run E2E snapshot tests
+        if: runner.os == 'Linux'
+        run: |
+          export PATH="$HOME/bin:$PATH"
+          bash tests/e2e_test.sh

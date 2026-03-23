@@ -1,23 +1,17 @@
   package Utils.Strings is
-//        ^^^^^ reference scip-ada . . . Utils/
-//              ^^^^^^^ definition scip-ada . . . Strings/
+//        ^^^^^ reference scip-ada . Multi_Unit . Utils/
+//              ^^^^^^^ definition scip-ada . Multi_Unit . Strings/
 //              kind Namespace
      function Repeat_Char (C : Character; Count : Natural) return String;
-//            ^^^^^^^^^^^ definition scip-ada . . . Repeat_Char().
+//            ^^^^^^^^^^^ definition scip-ada . Multi_Unit . Repeat_Char().
 //            kind Function
-//            documentation
-//            > function Repeat_Char (C : Character; Count : Natural) return String
-//                         ^ definition scip-ada . . . C.
+//                         ^ definition scip-ada . Multi_Unit . C.
 //                         kind Variable
-//                         documentation
-//                         > function Repeat_Char (C : Character; Count : Natural) return String
-//                                        ^^^^^ definition scip-ada . . . Count.
+//                                        ^^^^^ definition scip-ada . Multi_Unit . Count.
 //                                        kind Variable
-//                                        documentation
-//                                        > function Repeat_Char (C : Character; Count : Natural) return String
   end Utils.Strings;
-//          ^^^^^^^ reference scip-ada . . . Strings/
-//                 ^^^^^^^ reference scip-ada . . . Strings/
-//                            ^^^^^ reference scip-ada . . . Count.
-//                                                 ^ reference scip-ada . . . C.
+//          ^^^^^^^ reference scip-ada . Multi_Unit . Strings/
+//                 ^^^^^^^ reference scip-ada . Multi_Unit . Strings/
+//                            ^^^^^ reference scip-ada . Multi_Unit . Count.
+//                                                 ^ reference scip-ada . Multi_Unit . C.
   

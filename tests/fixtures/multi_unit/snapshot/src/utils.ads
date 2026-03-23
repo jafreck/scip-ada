@@ -1,35 +1,25 @@
   package Utils is
-//        ^^^^^ definition scip-ada . . . Utils/
+//        ^^^^^ definition scip-ada . Multi_Unit . Utils/
 //        kind Namespace
      function Add (X, Y : Integer) return Integer;
-//            ^^^ definition scip-ada . . . Add().
+//            ^^^ definition scip-ada . Multi_Unit . Add().
 //            kind Function
-//            documentation
-//            > function Add (X, Y : Integer) return Integer
-//                 ^ definition scip-ada . . . X.
+//                 ^ definition scip-ada . Multi_Unit . X.
 //                 kind Variable
-//                 documentation
-//                 > function Add (X, Y : Integer) return Integer
-//                    ^ definition scip-ada . . . Y.
+//                    ^ definition scip-ada . Multi_Unit . Y.
 //                    kind Variable
-//                    documentation
-//                    > function Add (X, Y : Integer) return Integer
      function Factorial (N : Natural) return Positive;
-//    ^^^^^ reference scip-ada . . . Utils/
-//     ^^^^^ reference scip-ada . . . Utils/
-//            ^^^^^^^^^ definition scip-ada . . . Factorial().
+//    ^^^^^ reference scip-ada . Multi_Unit . Utils/
+//     ^^^^^ reference scip-ada . Multi_Unit . Utils/
+//            ^^^^^^^^^ definition scip-ada . Multi_Unit . Factorial().
 //            kind Function
-//            documentation
-//            > function Factorial (N : Natural) return Positive
-//                       ^ definition scip-ada . . . N.
+//                       ^ definition scip-ada . Multi_Unit . N.
 //                       kind Variable
-//                       documentation
-//                       > function Factorial (N : Natural) return Positive
   end Utils;
-//    ^^^^^ reference scip-ada . . . Utils/
-//         ^^^^^ reference scip-ada . . . Utils/
-//             ^ reference scip-ada . . . X.
-//                 ^ reference scip-ada . . . Y.
+//    ^^^^^ reference scip-ada . Multi_Unit . Utils/
+//         ^^^^^ reference scip-ada . Multi_Unit . Utils/
+//             ^ reference scip-ada . Multi_Unit . X.
+//                 ^ reference scip-ada . Multi_Unit . Y.
   
-//       ^^^ reference scip-ada . . . Add().
-//          ^^^ reference scip-ada . . . Add().
+//       ^^^ reference scip-ada . Multi_Unit . Add().
+//          ^^^ reference scip-ada . Multi_Unit . Add().
