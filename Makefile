@@ -1,4 +1,4 @@
-.PHONY: build build-minimal test test-minimal e2e check format clean docker-image docker-test
+.PHONY: build build-minimal test test-minimal e2e e2e-repos check format clean docker-image docker-test
 
 # Ensure alr is on the PATH
 export PATH := $(HOME)/bin:$(PATH)
@@ -27,6 +27,9 @@ test-minimal:
 
 e2e: build
 	bash tests/e2e_test.sh
+
+e2e-repos: build
+	bash tests/e2e_repos_test.sh
 
 check:
 	alr exec -- gnatcheck -P scip_ada.gpr -rules -from=gnatcheck.rules 2>/dev/null || \
