@@ -230,11 +230,21 @@ package body SCIP_Ada.SCIP.Emitter is
       return Occ;
    end Encode_Occurrence;
 
+   function Encode_Signature_Documentation
+     (Signature : String) return Byte_Buffer
+   is
+      Doc : Byte_Buffer;
+   begin
+      Encode_String_Field (Doc, Document_Language_Field, "ada");
+      Encode_String_Field (Doc, Document_Text_Field, Signature);
+      return Doc;
+   end Encode_Signature_Documentation;
+
    function Encode_Symbol_Info
      (Symbol_Str    : String;
       Kind          : Mapping.SCIP_Symbol_Kind;
       Display_Name  : String;
-      Documentation : String := "";
+      Signature     : String := "";
       Doc_Comment   : String := "";
       Kind_Override : Integer := -1;
       Display_Name_Override : String := "") return Byte_Buffer
@@ -247,13 +257,19 @@ package body SCIP_Ada.SCIP.Emitter is
          else Display_Name);
    begin
       Encode_String_Field (SI, Symbol_Info_Symbol_Field, Symbol_Str);
-      if Documentation'Length > 0 then
-         --  documentation is field 3, repeated string — signature first
-         Encode_String_Field
-           (SI, Symbol_Info_Documentation_Field, Documentation);
+      if Signature'Length > 0 then
+         declare
+            Sig_Doc : constant Byte_Buffer :=
+              Encode_Signature_Documentation (Signature);
+         begin
+            Encode_Submessage_Field
+              (SI,
+               Symbol_Info_Signature_Documentation_Field,
+               Sig_Doc);
+         end;
       end if;
       if Doc_Comment'Length > 0 then
-         --  doc comment as additional documentation entry
+         --  Non-code documentation belongs in the documentation array.
          Encode_String_Field
            (SI, Symbol_Info_Documentation_Field, Doc_Comment);
       end if;
