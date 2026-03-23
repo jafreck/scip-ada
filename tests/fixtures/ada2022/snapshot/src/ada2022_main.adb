@@ -15,9 +15,11 @@
   
   procedure Ada2022_Main is
 //          ^^^^^^^^^^^^ definition scip-ada . . . Ada2022_Main().
+//          kind Function
 //          documentation
 //          > procedure Ada2022_Main
 //          ^^^^^^^^^^^^ definition scip-ada . . . Ada2022_Main().
+//          kind Function
 //          documentation
 //          > procedure Ada2022_Main
   
@@ -26,10 +28,7 @@
      -----------------------------------------------------------------
      Origin : constant Point := (X => 0, Y => 0);
 //   ^^^^^^ definition scip-ada . . . Origin#
-//   documentation
-//   > --------------------------------------------------------------
-//   > Delta aggregates
-//   > --------------------------------------------------------------
+//   kind Struct
 //                     ^^^^^ reference scip-ada . . . Point#
 //                               ^ reference scip-ada . . . X.
 //                                       ^ reference scip-ada . . . Y.
@@ -37,22 +36,19 @@
      --  Record delta aggregate: modify one field
      P1 : Point := (Origin with delta X => 10);
 //   ^^ definition scip-ada . . . P1#
-//   documentation
-//   > Record delta aggregate: modify one field
+//   kind Struct
 //                  ^^^^^^ reference scip-ada . . . Origin#
   
      --  Chain delta: modify both fields
      P2 : constant Point := (P1 with delta Y => 20);
 //   ^^ definition scip-ada . . . P2#
-//   documentation
-//   > Chain delta: modify both fields
+//   kind Struct
 //                           ^^ reference scip-ada . . . P1#
   
      --  Color delta aggregate
      Base_Color : constant Color := (R => 255, G => 128, B => 0, A => 255);
 //   ^^^^^^^^^^ definition scip-ada . . . Base_Color#
-//   documentation
-//   > Color delta aggregate
+//   kind Struct
 //                         ^^^^^ reference scip-ada . . . Color#
 //                                   ^ reference scip-ada . . . R.
 //                                             ^ reference scip-ada . . . G.
@@ -60,6 +56,7 @@
 //                                                               ^ reference scip-ada . . . A.
      Faded      : constant Color := (Base_Color with delta A => 128);
 //   ^^^^^ definition scip-ada . . . Faded#
+//   kind Struct
 //                                   ^^^^^^^^^^ reference scip-ada . . . Base_Color#
   
      -----------------------------------------------------------------
@@ -69,19 +66,17 @@
      --  Array with iterated association: squares
      Squares : constant Fixed_Array := (for I in 1 .. 5 => I * I);
 //   ^^^^^^^ definition scip-ada . . . Squares.
-//   documentation
-//   > Array with iterated association: squares
+//   kind Variable
 //                      ^^^^^^^^^^^^^^^^^^^^ reference scip-ada . . . Fixed_Array(integer)#
 //                                          ^ definition scip-ada . . . I.
+//                                          kind Variable
 //                                                         ^ reference scip-ada . . . I.
 //                                                             ^ reference scip-ada . . . I.
   
      --  Array with expression
      Doubled : constant Fixed_Array := (for I in 1 .. 5 => I * 2);
 //   ^^^^^^^ definition scip-ada . . . Doubled.
-//   documentation
-//   > Array with expression
-//                                          ^ definition scip-ada . . . I.
+//   kind Variable
 //                                                         ^ reference scip-ada . . . I.
   
      -----------------------------------------------------------------
@@ -89,20 +84,14 @@
      -----------------------------------------------------------------
      Counter : Integer := 10;
 //   ^^^^^^^ definition scip-ada . . . Counter.
-//   documentation
-//   > --------------------------------------------------------------
-//   > Target name symbol (@) in assignments
-//   > --------------------------------------------------------------
+//   kind Variable
   
      -----------------------------------------------------------------
      --  Default_Initial_Condition (aspect on Positive_Int type)
      -----------------------------------------------------------------
      PI : Positive_Int := Make (42);
 //   ^^ definition scip-ada . . . PI#
-//   documentation
-//   > --------------------------------------------------------------
-//   > Default_Initial_Condition (aspect on Positive_Int type)
-//   > --------------------------------------------------------------
+//   kind Struct
 //        ^^^^^^^^^^^^ reference scip-ada . . . Positive_Int#
 //                        ^^^^ reference scip-ada . . . Make().
   
@@ -111,20 +100,25 @@
      -----------------------------------------------------------------
      function Triangle_Area (Base, Height : Float) return Float is
 //            ^^^^^^^^^^^^^ definition scip-ada . . . Triangle_Area().
+//            kind Function
 //            documentation
 //            > function Triangle_Area (Base, Height : Float) return Float
 //            ^^^^^^^^^^^^^ definition scip-ada . . . Triangle_Area().
+//            kind Function
 //            documentation
 //            > function Triangle_Area (Base, Height : Float) return Float
 //                           ^^^^ definition scip-ada . . . Base.
+//                           kind Variable
 //                           documentation
 //                           > function Triangle_Area (Base, Height : Float) return Float
 //                                 ^^^^^^ definition scip-ada . . . Height.
+//                                 kind Variable
 //                                 documentation
 //                                 > function Triangle_Area (Base, Height : Float) return Float
        (declare
           Half : constant Float := Base / 2.0;
 //        ^^^^ definition scip-ada . . . Half.
+//        kind Variable
 //                                 ^^^^ reference scip-ada . . . Base.
         begin
           Half * Height);
@@ -136,29 +130,21 @@
      -----------------------------------------------------------------
      procedure Show_Point (Label : String; P : Point) is
 //             ^^^^^^^^^^ definition scip-ada . . . Show_Point().
+//             kind Function
 //             documentation
 //             > procedure Show_Point (Label : String; P : Point)
-//             documentation
-//             > --------------------------------------------------------------
-//             > Local subprogram using Ada 2022 features
-//             > --------------------------------------------------------------
 //             ^^^^^^^^^^ definition scip-ada . . . Show_Point().
+//             kind Function
 //             documentation
 //             > procedure Show_Point (Label : String; P : Point)
-//             documentation
-//             > --------------------------------------------------------------
-//             > Local subprogram using Ada 2022 features
-//             > --------------------------------------------------------------
 //                         ^^^^^ definition scip-ada . . . Label.
+//                         kind Variable
 //                         documentation
-//                         > procedure Show_Array (Label : String; A : Fixed_Array)
+//                         > procedure Show_Point (Label : String; P : Point)
 //                                         ^ definition scip-ada . . . P#
+//                                         kind Struct
 //                                         documentation
 //                                         > procedure Show_Point (Label : String; P : Point)
-//                                         documentation
-//                                         > --------------------------------------------------------------
-//                                         > Local subprogram using Ada 2022 features
-//                                         > --------------------------------------------------------------
      begin
         Put_Line (Label & ": (" & P.X'Image & "," & P.Y'Image & ")");
 //      ^^^^^^^^ reference scip-ada . . . Put_Line().
@@ -171,15 +157,15 @@
   
      procedure Show_Array (Label : String; A : Fixed_Array) is
 //             ^^^^^^^^^^ definition scip-ada . . . Show_Array().
+//             kind Function
 //             documentation
 //             > procedure Show_Array (Label : String; A : Fixed_Array)
 //             ^^^^^^^^^^ definition scip-ada . . . Show_Array().
+//             kind Function
 //             documentation
 //             > procedure Show_Array (Label : String; A : Fixed_Array)
-//                         ^^^^^ definition scip-ada . . . Label.
-//                         documentation
-//                         > procedure Show_Array (Label : String; A : Fixed_Array)
 //                                         ^ definition scip-ada . . . A.
+//                                         kind Variable
 //                                         documentation
 //                                         > procedure Show_Array (Label : String; A : Fixed_Array)
      begin
@@ -187,7 +173,6 @@
 //      ^^^ reference scip-ada . . . Put().
 //           ^^^^^ reference scip-ada . . . Label.
         for I in A'Range loop
-//          ^ definition scip-ada . . . I.
 //               ^ reference scip-ada . . . A.
            Put (A (I)'Image);
 //              ^ reference scip-ada . . . A.
@@ -206,8 +191,7 @@
      --  More locals for testing
      Area_Val : Float;
 //   ^^^^^^^^ definition scip-ada . . . Area_Val.
-//   documentation
-//   > More locals for testing
+//   kind Variable
   
   begin
      -----------------------------------------------------------------

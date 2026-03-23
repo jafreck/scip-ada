@@ -112,18 +112,6 @@ Your Ada project must be compilable with GNAT. `scip-ada` reads the `.ali` files
 
 3. **Verify the output** (optional, requires the [SCIP CLI](https://github.com/sourcegraph/scip)):
 
-   Install `scip` from the Sourcegraph releases and place it on your `PATH`:
-
-   ```bash
-   mkdir -p "$HOME/bin"
-   TAG="v0.6.1"
-   OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
-   ARCH="$(uname -m | sed -e 's/x86_64/amd64/')"
-   curl -fsSL "https://github.com/sourcegraph/scip/releases/download/$TAG/scip-$OS-$ARCH.tar.gz" \
-     | tar -xzf - -C "$HOME/bin" scip
-   chmod +x "$HOME/bin/scip"
-   ```
-
    ```bash
    scip print --json index.scip | head -20
    ```

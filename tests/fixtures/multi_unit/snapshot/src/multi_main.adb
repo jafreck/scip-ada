@@ -8,19 +8,24 @@
   
   procedure Multi_Main is
 //          ^^^^^^^^^^ definition scip-ada . . . Multi_Main().
+//          kind Function
 //          documentation
 //          > procedure Multi_Main
 //          ^^^^^^^^^^ definition scip-ada . . . Multi_Main().
+//          kind Function
 //          documentation
 //          > procedure Multi_Main
      Sum  : constant Integer := Utils.Add (3, 4);
 //   ^^^ definition scip-ada . . . Sum.
+//   kind Variable
 //                                    ^^^ reference scip-ada . . . Add().
      Fact : constant Positive := Utils.Factorial (5);
 //   ^^^^ definition scip-ada . . . Fact.
+//   kind Variable
 //                                     ^^^^^^^^^ reference scip-ada . . . Factorial().
      Line : constant String := Utils.Strings.Repeat_Char ('-', 20);
 //   ^^^^ definition scip-ada . . . Line.
+//   kind Variable
 //                                           ^^^^^^^^^^^ reference scip-ada . . . Repeat_Char().
   begin
      Ada.Text_IO.Put_Line (Line);

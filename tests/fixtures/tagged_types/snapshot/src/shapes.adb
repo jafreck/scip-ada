@@ -23,6 +23,7 @@
 //                                 ^^^^^^ reference scip-ada . . . Circle#
         Pi : constant Float := 3.14159;
 //      ^^ definition scip-ada . . . Pi.
+//      kind Variable
      begin
         return Pi * S.Radius * S.Radius;
 //             ^^ reference scip-ada . . . Pi.
