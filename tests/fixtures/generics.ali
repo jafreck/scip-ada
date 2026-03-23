@@ -1,0 +1,31 @@
+V "GNAT Lib v2024"
+A -gnatA
+P ZX
+
+U generic_stack%s generic_stack.ads abc123 GE NE
+W system%s system.ads system.ali
+
+D generic_stack.ads 20240101120000 aaa111 generic_stack
+D generic_stack.adb 20240101120001 bbb222 generic_stack
+D int_stack.ads 20240101120002 ccc333 int_stack
+D system.ads 20240101120000 ddd444 system%s
+
+X 1 generic_stack.ads
+3G9*Generic_Stack 4e18 2|3b7 2|25l8
+5+9*Element_Type
+7R9*Stack 2|5r9 8c9 3|4r9
+8C9 Data 11r12
+9I9*Top 12m9 2|10r9 2|15m9
+11U14*Push 2|8b14 2|18s14
+13V14*Pop 2|12b14 2|22s14
+15V14*Is_Empty 2|16b14
+X 2 generic_stack.adb
+3G9 Generic_Stack 25l8
+5r9 Stack
+8U14 Push 18s14
+12V14 Pop 22s14
+16V14 Is_Empty
+X 3 int_stack.ads
+2K9*Int_Stack 4l8
+3k9*My_Stack[1|3{1|3}]
+4r9 Stack

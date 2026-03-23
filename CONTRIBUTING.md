@@ -97,7 +97,17 @@ make e2e
 ```
 
 Prerequisites for E2E tests:
-- `scip` CLI installed (`npm install -g @sourcegraph/scip` or download from releases)
+- `scip` CLI installed from the Sourcegraph releases, for example:
+
+    ```bash
+    mkdir -p "$HOME/bin"
+    TAG="v0.6.1"
+    OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+    ARCH="$(uname -m | sed -e 's/x86_64/amd64/')"
+    curl -fsSL "https://github.com/sourcegraph/scip/releases/download/$TAG/scip-$OS-$ARCH.tar.gz" \
+        | tar -xzf - -C "$HOME/bin" scip
+    chmod +x "$HOME/bin/scip"
+    ```
 - GNAT and GPRbuild available
 
 ### Test fixtures

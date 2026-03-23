@@ -5,17 +5,16 @@
   --  Main entry point; prints a greeting message
   procedure Hello is
 //          ^^^^^ definition scip-ada . . . Hello().
+//          kind Function
 //          documentation
 //          > procedure Hello
-//          documentation
-//          > Main entry point; prints a greeting message
 //          ^^^^^ definition scip-ada . . . Hello().
+//          kind Function
 //          documentation
 //          > procedure Hello
-//          documentation
-//          > Main entry point; prints a greeting message
      Message : constant String := "Hello, World!";
 //   ^^^^^^^ definition scip-ada . . . Message.
+//   kind Variable
   begin
      Ada.Text_IO.Put_Line (Message);
 //               ^^^^^^^^ reference scip-ada . . . Put_Line().

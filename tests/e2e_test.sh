@@ -7,6 +7,11 @@ SCIP_ADA="$PROJECT_ROOT/bin/scip_ada"
 export PATH="$HOME/bin:$PATH"
 cd "$PROJECT_ROOT"
 eval "$(alr printenv 2>/dev/null)" || true
+if ! command -v scip >/dev/null 2>&1; then
+  echo "error: 'scip' CLI not found on PATH" >&2
+  echo "install it from https://github.com/sourcegraph/scip/releases and place the binary in $HOME/bin" >&2
+  exit 1
+fi
 PASS=0; FAIL=0; TOTAL=0
 for fixture in hello multi_unit generics tagged_types overloads ada2022; do
   TOTAL=$((TOTAL+1))

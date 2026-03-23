@@ -1,0 +1,19 @@
+V "GNAT Lib v2024"
+A -gnatA
+P ZX
+
+U hello%shello.adsabc123 EE NE
+W system%ssystem.adssystem.ali
+
+D hello.ads 20240101120000 abc123 hello
+D hello.adb 20240101120001 def456 hello
+D system.ads 20240101120000 789abc system%s
+
+X 1 hello.ads
+5K9*Hello 6e13 2|3b7 2|11l8
+7U14*Say_Hello 2|5b14 2|9s14
+9I9*Count 10r5 2|7m9
+X 2 hello.adb
+3K9 Hello 11l8
+5U14 Say_Hello 9s14
+7i9 Count

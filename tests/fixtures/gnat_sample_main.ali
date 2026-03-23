@@ -1,0 +1,74 @@
+V "GNAT Lib v15"
+M P W=b
+A -gnatws
+A -mmacosx-version-min=16.0.0
+A -mcpu=apple-m1
+A -mlittle-endian
+A -mabi=lp64
+A -fPIC
+P SS ZX
+
+RN
+RV NO_FLOATING_POINT
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+
+U sample_main%b		sample_main.adb		197d8dfd NE OO SU
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W sample%s		sample.adb		sample.ali
+
+D ada.ads		20250419085653 76789da1 ada%s
+D a-except.ads		20250419085653 e7970cd9 ada.exceptions%s
+D a-stream.ads		20250419085653 17477cbd ada.streams%s
+D a-string.ads		20250419085653 90ac6797 ada.strings%s
+D a-sttebu.ads		20250419085653 f1ad67a2 ada.strings.text_buffers%s
+D a-stuten.ads		20250419085653 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20250419085653 fbca0ad5 ada.tags%s
+D a-unccon.ads		20250419085653 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20250419085653 9111f9c1 interfaces%s
+D sample.ads		20260322034400 d5315d64 sample%s
+D sample_main.adb	20260322034414 cc4cd099 sample_main%b
+D system.ads		20250419085653 70765b54 system%s
+D s-exctab.ads		20250419085653 91bef6ef system.exception_table%s
+D s-parame.ads		20250419085653 3597fc11 system.parameters%s
+D s-putima.ads		20250419085653 17291fe4 system.put_images%s
+D s-retsta.ads		20250419085653 0f6b06cb system.return_stack%s
+D s-secsta.ads		20250419085653 578279f5 system.secondary_stack%s
+D s-soflin.ads		20250419085653 5d88fdea system.soft_links%s
+D s-stache.ads		20250419085653 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20250419085653 1c9580f6 system.standard_library%s
+D s-stoele.ads		20250419085653 ccded4e8 system.storage_elements%s
+D s-stratt.ads		20250419085653 516607ae system.stream_attributes%s
+D s-traent.ads		20250419085653 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20250419085653 fa2a7f59 system.unsigned_types%s
+G a e
+G c Z b b [sample_main standard 3 11 none]
+G r s shape [sample_main standard 3 11 none] [shapeIP sample 10 9 none]
+G r s circle [sample_main standard 3 11 none] [circleIP sample 17 9 none]
+G r c none [sample_main standard 3 11 none] [Oadd sample 33 13 none]
+G r c none [sample_main standard 3 11 none] [draw sample 15 14 none]
+G r c none [sample_main standard 3 11 none] [area sample 14 13 none]
+G r c none [sample_main standard 3 11 none] [area sample 21 24 none]
+X 10 sample.ads
+1K9*Sample 43e11 11|1w6 4r9 5r9 6r9 7r9 8r9 11r10 13r4 14r9 16r4 16r17 17r9
+5R9*Point 8e14 11|4r16 5r16 6r16
+6i7*X{integer} 11|4m26 5m26
+7i7*Y{integer} 11|4m34 5m34
+10R9*Shape 12e14 11|7r16 16r24
+11r7*Origin{5R9} 11|12m6 15m10
+14V13*Area{float} 11|14s16
+15U14*Draw 11|13s11 16s11
+17R9*Circle<10R9> 19e14 11|8r16
+18f7*Radius{float} 11|15m24
+21V24*Area{float}<14p13> 11|17s16
+33V14*"+"{5R9} 11|11s18
+X 11 sample_main.adb
+3U11*Sample_Main 3b11 18l5 18t16
+4r4 P1{10|5R9} 11r22 12r16 15r20
+5r4 P2{10|5R9} 11r26
+6r4 P3{10|5R9} 11m4
+7r4 S{10|10R9} 12m4 13r17 14r22
+8r4 C{10|17R9} 15m4 16r31 17r22
+9f4 A{float} 14m4 17m4
+

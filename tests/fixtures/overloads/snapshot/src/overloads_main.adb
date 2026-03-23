@@ -3,9 +3,11 @@
   
   procedure Overloads_Main is
 //          ^^^^^^^^^^^^^^ definition scip-ada . . . Overloads_Main().
+//          kind Function
 //          documentation
 //          > procedure Overloads_Main
 //          ^^^^^^^^^^^^^^ definition scip-ada . . . Overloads_Main().
+//          kind Function
 //          documentation
 //          > procedure Overloads_Main
   begin
@@ -19,12 +21,15 @@
      declare
         S1 : constant String := Converters.To_String (100);
 //      ^^ definition scip-ada . . . S1.
+//      kind Variable
 //                                         ^^^^^^^^^ reference scip-ada . . . To_String().
         S2 : constant String := Converters.To_String (2.718);
 //      ^^ definition scip-ada . . . S2.
+//      kind Variable
 //                                         ^^^^^^^^^ reference scip-ada . . . To_String().
         S3 : constant String := Converters.To_String (True);
 //      ^^ definition scip-ada . . . S3.
+//      kind Variable
 //                                         ^^^^^^^^^ reference scip-ada . . . To_String().
      begin
         Converters.Print (S1);
