@@ -2,7 +2,6 @@ with Ada.Streams.Stream_IO;
 with Ada.Strings.Fixed;
 with Ada.Directories;
 with SCIP_Ada.SCIP.Protobuf;
-with SCIP_Ada.SCIP.Symbols;
 with SCIP_Ada.SCIP.Mapping;
 
 package body SCIP_Ada.SCIP.Emitter is
@@ -33,7 +32,9 @@ package body SCIP_Ada.SCIP.Emitter is
          Kind_Overrides          =>
            Kind_Override_Maps.Empty_Map,
          Display_Name_Overrides  =>
-           Signature_Maps.Empty_Map);
+           Signature_Maps.Empty_Map,
+         Pkg_Context            =>
+           Symbols.Make_Context (".", ".", "."));
    end Empty_Enrichment;
 
    procedure Add_Signature
@@ -445,11 +446,7 @@ package body SCIP_Ada.SCIP.Emitter is
       Enrichment   : Enrichment_Map)
    is
       pragma Unreferenced (Project_Root);
-      Ctx : constant Symbols.Symbol_Context :=
-        Symbols.Make_Context
-          (Manager      => ".",
-           Package_Name => ".",
-           Version      => ".");
+      Ctx : constant Symbols.Symbol_Context := Enrichment.Pkg_Context;
    begin
       for File_Idx in 1 .. Integer (ALI_Data.Files.Length) loop
          declare
@@ -636,11 +633,7 @@ package body SCIP_Ada.SCIP.Emitter is
       Seen_Docs     : Signature_Maps.Map;
       Seen_External : Signature_Maps.Map;
 
-      Ctx : constant Symbols.Symbol_Context :=
-        Symbols.Make_Context
-          (Manager      => ".",
-           Package_Name => ".",
-           Version      => ".");
+      Ctx : constant Symbols.Symbol_Context := Enrichment.Pkg_Context;
 
       --  Return the resolved relative path for file index FI
       --  inside ALI file A, or "" if FI is out of range.
