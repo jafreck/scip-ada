@@ -7,6 +7,7 @@
 //                                        ^^^^^ definition scip-ada . . . Count.
         Result : String (1 .. Count) := (others => C);
 //      ^^^^^^ definition scip-ada . . . Result.
+//      kind Variable
      begin
         return Result;
 //             ^^^^^^ reference scip-ada . . . Result.

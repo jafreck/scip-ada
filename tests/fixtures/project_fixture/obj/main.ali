@@ -1,0 +1,13 @@
+V "GNAT Lib v2024"
+A -gnatA
+P ZX
+
+U main%s		main.ads		abc123 EE NE
+
+D main.ads		20240101120000 abc123 main
+D utils.ads		20240101120000 def456 utils
+
+X 1 main.ads
+2U14*Run 3e5
+X 2 utils.ads
+2V14*Add 3r5
