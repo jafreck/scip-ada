@@ -7,7 +7,7 @@
       <img alt="SCIP by Sourcegraph" src="https://img.shields.io/badge/SCIP-Sourcegraph-F96316?style=for-the-badge&logo=sourcegraph&logoColor=white">
    </p>
    <p>
-      <a href="https://github.com/AdalineAi/scip-ada/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/AdalineAi/scip-ada/actions/workflows/ci.yml/badge.svg"></a>
+      <a href="https://github.com/jafreck/scip-ada/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/jafreck/scip-ada/actions/workflows/ci.yml/badge.svg"></a>
       <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
       <a href="https://alire.ada.dev/crates/scip_ada"><img alt="Alire" src="https://img.shields.io/badge/alire-scip__ada-orange"></a>
    </p>
@@ -33,7 +33,7 @@ The resulting `index.scip` can be consumed by any SCIP-compatible tool, includin
 
 ### Binary download (recommended)
 
-Download a pre-built binary from the [latest release](https://github.com/AdalineAi/scip-ada/releases/latest):
+Download a pre-built binary from the [latest release](https://github.com/jafreck/scip-ada/releases/latest):
 
 | Platform | Binary |
 |----------|--------|
@@ -45,7 +45,7 @@ Download a pre-built binary from the [latest release](https://github.com/Adaline
 #### Linux
 
 ```bash
-curl -Lo scip-ada https://github.com/AdalineAi/scip-ada/releases/latest/download/scip-ada-linux-x86_64
+curl -Lo scip-ada https://github.com/jafreck/scip-ada/releases/latest/download/scip-ada-linux-x86_64
 chmod +x scip-ada
 sudo mv scip-ada /usr/local/bin/
 ```
@@ -53,7 +53,7 @@ sudo mv scip-ada /usr/local/bin/
 #### macOS (Apple Silicon)
 
 ```bash
-curl -Lo scip-ada https://github.com/AdalineAi/scip-ada/releases/latest/download/scip-ada-macos-arm64
+curl -Lo scip-ada https://github.com/jafreck/scip-ada/releases/latest/download/scip-ada-macos-arm64
 chmod +x scip-ada
 mv scip-ada /usr/local/bin/
 ```
@@ -61,7 +61,7 @@ mv scip-ada /usr/local/bin/
 #### macOS (Intel)
 
 ```bash
-curl -Lo scip-ada https://github.com/AdalineAi/scip-ada/releases/latest/download/scip-ada-macos-x86_64
+curl -Lo scip-ada https://github.com/jafreck/scip-ada/releases/latest/download/scip-ada-macos-x86_64
 chmod +x scip-ada
 mv scip-ada /usr/local/bin/
 ```
@@ -75,7 +75,7 @@ Download `scip-ada-windows-x86_64.exe` from the release page and place it on you
 Requires [Alire](https://alire.ada.dev/) (the Ada package manager) and GNAT.
 
 ```bash
-git clone https://github.com/AdalineAi/scip-ada.git
+git clone https://github.com/jafreck/scip-ada.git
 cd scip-ada
 alr build --release
 # Binary is at bin/scip_ada
