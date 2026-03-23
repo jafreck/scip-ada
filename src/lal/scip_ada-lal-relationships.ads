@@ -16,10 +16,11 @@ package SCIP_Ada.LAL.Relationships is
       Overrides);       --  subprogram overrides base operation
 
    type Relationship_Info is record
-      Child_Name  : Unbounded_String;
-      Child_Line  : Positive;
-      Parent_Name : Unbounded_String;
-      Kind        : Relationship_Kind;
+      Child_Name   : Unbounded_String;
+      Child_Line   : Positive;
+      Parent_Name  : Unbounded_String;
+      Parent_Scope : Unbounded_String;  --  dot-separated scope chain
+      Kind         : Relationship_Kind;
    end record;
 
    package Relationship_Vectors is new Ada.Containers.Vectors
