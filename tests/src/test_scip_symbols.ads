@@ -13,4 +13,6 @@ package Test_SCIP_Symbols is
        (T : in out SCIP_Ada.Tests.Fixture);
     procedure Test_Remaining_Type_And_Object_Kinds
        (T : in out SCIP_Ada.Tests.Fixture);
+    procedure Test_Name_Escaping
+       (T : in out SCIP_Ada.Tests.Fixture);
 end Test_SCIP_Symbols;

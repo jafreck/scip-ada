@@ -421,6 +421,13 @@ package body SCIP_Ada.Project is
          Find_ALI_In_Dir (Abs_Obj, Info.ALI_Files);
       end;
 
+      --  Sort ALI files for deterministic output ordering
+      declare
+         package Sort is new String_Vectors.Generic_Sorting ("<");
+      begin
+         Sort.Sort (Info.ALI_Files);
+      end;
+
       --  Check for alire.toml in project root
       Parse_Alire_Toml (GPR_Dir, Info.Alire_Name, Info.Alire_Version);
 
@@ -441,6 +448,13 @@ package body SCIP_Ada.Project is
       Info.Source_Dirs.Append (To_Unbounded_String (Abs_Dir));
 
       Find_ALI_Recursive (Abs_Dir, Info.ALI_Files);
+
+      --  Sort ALI files for deterministic output ordering
+      declare
+         package Sort is new String_Vectors.Generic_Sorting ("<");
+      begin
+         Sort.Sort (Info.ALI_Files);
+      end;
 
       --  Check for alire.toml in directory root
       Parse_Alire_Toml (Abs_Dir, Info.Alire_Name, Info.Alire_Version);

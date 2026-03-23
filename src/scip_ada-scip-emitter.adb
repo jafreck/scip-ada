@@ -1,6 +1,7 @@
 with Ada.Streams.Stream_IO;
 with Ada.Strings.Fixed;
 with Ada.Directories;
+with Ada.Containers.Vectors;
 with SCIP_Ada.SCIP.Protobuf;
 with SCIP_Ada.SCIP.Mapping;
 
@@ -830,64 +831,108 @@ package body SCIP_Ada.SCIP.Emitter is
       Encode_Submessage_Field
         (Index_Buf, Index_Metadata_Field, Meta);
 
-      --  Pass 1: emit one Document per unique project-local file.
-      for ALI_Data of ALI_Files loop
-         for F_Idx in 1 .. Natural (ALI_Data.Files.Length) loop
-            declare
-               Rel_Path : constant String :=
-                 To_String (ALI_Data.Files.Element (F_Idx).Path);
-            begin
-               if Is_Project_File (Rel_Path, Project_Root)
-                 and then not Seen_Docs.Contains (Rel_Path)
-               then
-                  Seen_Docs.Insert (Rel_Path, "");
-                  Build_Document (Rel_Path);
-               end if;
-            end;
-         end loop;
-      end loop;
-
-      --  Pass 2: collect external symbols (definitions in
-      --  non-project files) into Index.external_symbols.
-      for ALI_Data of ALI_Files loop
-         for Sec of ALI_Data.Sections loop
-            for Entity of Sec.Entities loop
+      --  Pass 1: collect all unique project-local file paths, then sort
+      --  and emit for deterministic output ordering.
+      declare
+         Sorted_Docs : SCIP_Ada.Project.String_Vectors.Vector;
+      begin
+         for ALI_Data of ALI_Files loop
+            for F_Idx in 1 .. Natural (ALI_Data.Files.Length) loop
                declare
-                  EP : constant String :=
-                    File_Path_For (ALI_Data, Entity.File_Index);
+                  Rel_Path : constant String :=
+                    To_String (ALI_Data.Files.Element (F_Idx).Path);
                begin
-                  if EP'Length > 0
-                    and then not Is_Project_File (EP, Project_Root)
+                  if Is_Project_File (Rel_Path, Project_Root)
+                    and then not Seen_Docs.Contains (Rel_Path)
                   then
-                     declare
-                        Sym : constant String :=
-                          Symbols.To_Symbol_String (Entity, Ctx);
-                     begin
-                        if not Seen_External.Contains (Sym) then
-                           Seen_External.Insert (Sym, "");
-                           declare
-                              Name : constant String :=
-                                To_String (Entity.Name);
-                              Kind : constant
-                                Mapping.SCIP_Symbol_Kind :=
-                                Mapping.To_SCIP_Kind
-                                  (Entity.Kind);
-                              SI : constant Byte_Buffer :=
-                                Encode_Symbol_Info
-                                  (Sym, Kind, Name);
-                           begin
-                              Encode_Submessage_Field
-                                (Index_Buf,
-                                 Index_External_Symbols_Field,
-                                 SI);
-                           end;
-                        end if;
-                     end;
+                     Seen_Docs.Insert (Rel_Path, "");
+                     Sorted_Docs.Append
+                       (To_Unbounded_String (Rel_Path));
                   end if;
                end;
             end loop;
          end loop;
-      end loop;
+
+         declare
+            package Doc_Sort is new
+              SCIP_Ada.Project.String_Vectors.Generic_Sorting ("<");
+         begin
+            Doc_Sort.Sort (Sorted_Docs);
+         end;
+
+         for Doc_Path of Sorted_Docs loop
+            Build_Document (To_String (Doc_Path));
+         end loop;
+      end;
+
+      --  Pass 2: collect external symbols (definitions in
+      --  non-project files).  Collect first, sort by symbol string,
+      --  then emit for deterministic output ordering.
+      declare
+         type Ext_Entry is record
+            Sym  : Unbounded_String;
+            Name : Unbounded_String;
+            Kind : Mapping.SCIP_Symbol_Kind;
+         end record;
+         package Ext_Vectors is new Ada.Containers.Vectors
+           (Positive, Ext_Entry);
+         function "<" (L, R : Ext_Entry) return Boolean is
+           (L.Sym < R.Sym);
+         package Ext_Sort is new Ext_Vectors.Generic_Sorting ("<");
+         Ext_Syms : Ext_Vectors.Vector;
+      begin
+         for ALI_Data of ALI_Files loop
+            for Sec of ALI_Data.Sections loop
+               for Entity of Sec.Entities loop
+                  declare
+                     EP : constant String :=
+                       File_Path_For (ALI_Data, Entity.File_Index);
+                  begin
+                     if EP'Length > 0
+                       and then not Is_Project_File
+                                      (EP, Project_Root)
+                     then
+                        declare
+                           Sym : constant String :=
+                             Symbols.To_Symbol_String
+                               (Entity, Ctx);
+                        begin
+                           if not Seen_External.Contains (Sym)
+                           then
+                              Seen_External.Insert (Sym, "");
+                              Ext_Syms.Append
+                                ((Sym  =>
+                                    To_Unbounded_String (Sym),
+                                  Name =>
+                                    Entity.Name,
+                                  Kind =>
+                                    Mapping.To_SCIP_Kind
+                                      (Entity.Kind)));
+                           end if;
+                        end;
+                     end if;
+                  end;
+               end loop;
+            end loop;
+         end loop;
+
+         Ext_Sort.Sort (Ext_Syms);
+
+         for E of Ext_Syms loop
+            declare
+               SI : constant Byte_Buffer :=
+                 Encode_Symbol_Info
+                   (To_String (E.Sym),
+                    E.Kind,
+                    To_String (E.Name));
+            begin
+               Encode_Submessage_Field
+                 (Index_Buf,
+                  Index_External_Symbols_Field,
+                  SI);
+            end;
+         end loop;
+      end;
 
       --  Write protobuf binary to file
       declare

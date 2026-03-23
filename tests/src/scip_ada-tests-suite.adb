@@ -147,6 +147,11 @@ package body SCIP_Ada.Tests.Suite is
 
          Result.Add_Test
         (Caller.Create
+           ("SCIP Symbols Name Escaping",
+            Test_SCIP_Symbols.Test_Name_Escaping'Access));
+
+         Result.Add_Test
+        (Caller.Create
            ("SCIP Mapping Kind Mapping",
             Test_SCIP_Mapping.Test_Kind_Mapping'Access));
 
