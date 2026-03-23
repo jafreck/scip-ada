@@ -74,6 +74,22 @@ package body SCIP_Ada.Project is
       return Ada.Directories.Full_Name (Path);
    end To_Full;
 
+   function To_Project_Relative
+     (Info : Project_Info;
+      Path : String) return String
+   is
+      Root : constant String :=
+        Ensure_Trailing_Sep (Normalize_Path (To_String (Info.Project_Root)));
+      Full : constant String := Normalize_Path (To_Full (Path));
+   begin
+      if Full'Length >= Root'Length
+        and then Full (Full'First .. Full'First + Root'Length - 1) = Root
+      then
+         return Full (Full'First + Root'Length .. Full'Last);
+      end if;
+      return Full;
+   end To_Project_Relative;
+
    ---------------------------------------------------------------------------
    --  GPR line parsing helpers
    ---------------------------------------------------------------------------
@@ -219,7 +235,7 @@ package body SCIP_Ada.Project is
 
    procedure Find_ALI_In_Dir
      (Dir    : String;
-      Result : in Out String_Vectors.Vector)
+      Result : in out String_Vectors.Vector)
    is
       Search    : Search_Type;
       Dir_Entry : Directory_Entry_Type;
@@ -271,6 +287,51 @@ package body SCIP_Ada.Project is
       End_Search (Search);
    end Find_ALI_Recursive;
 
+   function Find_File_Recursive
+     (Dir      : String;
+      File_Name : String) return String
+   is
+      Search    : Search_Type;
+      Dir_Entry : Directory_Entry_Type;
+   begin
+      if not Exists (Dir) or else Kind (Dir) /= Ada.Directories.Directory then
+         return "";
+      end if;
+
+      Start_Search (Search, Dir, File_Name, (Ordinary_File => True,
+                                             others => False));
+      if More_Entries (Search) then
+         Get_Next_Entry (Search, Dir_Entry);
+         End_Search (Search);
+         return Full_Name (Dir_Entry);
+      end if;
+      End_Search (Search);
+
+      Start_Search (Search, Dir, "", (Ada.Directories.Directory => True,
+                                      others => False));
+      while More_Entries (Search) loop
+         Get_Next_Entry (Search, Dir_Entry);
+         declare
+            Name : constant String := Simple_Name (Dir_Entry);
+         begin
+            if Name /= "." and then Name /= ".." then
+               declare
+                  Match : constant String :=
+                    Find_File_Recursive (Full_Name (Dir_Entry), File_Name);
+               begin
+                  if Match'Length > 0 then
+                     End_Search (Search);
+                     return Match;
+                  end if;
+               end;
+            end if;
+         end;
+      end loop;
+      End_Search (Search);
+
+      return "";
+   end Find_File_Recursive;
+
    ---------------------------------------------------------------------------
    --  Discover_From_GPR
    ---------------------------------------------------------------------------
@@ -288,11 +349,13 @@ package body SCIP_Ada.Project is
       --  Resolve Source_Dirs to absolute paths
       for I in 1 .. Natural (Info.Source_Dirs.Length) loop
          declare
-            Rel : constant String := To_String (Info.Source_Dirs (Positive (I)));
-            Abs_Path : constant String := Make_Absolute (GPR_Dir, Rel);
+            Rel : constant String :=
+              To_String (Info.Source_Dirs (Positive (I)));
+            Raw_Path : constant String := Make_Absolute (GPR_Dir, Rel);
          begin
             Info.Source_Dirs.Replace_Element
-              (Positive (I), To_Unbounded_String (Abs_Path));
+              (Positive (I),
+               To_Unbounded_String (To_Full (Raw_Path)));
          end;
       end loop;
 
@@ -333,32 +396,39 @@ package body SCIP_Ada.Project is
      (Info      : Project_Info;
       ALI_Path  : String) return String
    is
-      Root : constant String :=
-        Ensure_Trailing_Sep (To_String (Info.Project_Root));
+      Normalized_ALI_Path : constant String := Normalize_Path (ALI_Path);
    begin
       --  Try each source dir; if the file exists there, return
       --  a project-relative path.
       for Dir of Info.Source_Dirs loop
          declare
             Candidate : constant String :=
-              Ensure_Trailing_Sep (To_String (Dir)) & ALI_Path;
+              Normalize_Path
+                (Ensure_Trailing_Sep (To_String (Dir)) & Normalized_ALI_Path);
          begin
             if Exists (Candidate) then
-               declare
-                  Full : constant String := Normalize_Path (To_Full (Candidate));
-               begin
-                  --  Make project-relative if it starts with Root
-                  if Full'Length >= Root'Length
-                    and then Full (Full'First .. Full'First + Root'Length - 1)
-                             = Root
-                  then
-                     return Full (Full'First + Root'Length .. Full'Last);
-                  end if;
-                  return Full;
-               end;
+               return To_Project_Relative (Info, Candidate);
             end if;
          end;
       end loop;
+
+      --  Some platforms/toolchains report source-dir paths differently enough
+      --  that the direct join above can miss. Fall back to searching the
+      --  declared source dirs for the basename before giving up.
+      declare
+         Base_Name : constant String := Simple_Name (Normalized_ALI_Path);
+      begin
+         for Dir of Info.Source_Dirs loop
+            declare
+               Match : constant String :=
+                 Find_File_Recursive (To_String (Dir), Base_Name);
+            begin
+               if Match'Length > 0 then
+                  return To_Project_Relative (Info, Match);
+               end if;
+            end;
+         end loop;
+      end;
 
       --  Not found in any source dir; return as-is
       return ALI_Path;
