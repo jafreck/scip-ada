@@ -41,7 +41,12 @@ jobs:
         run: alr settings --set dependencies.shared false
 
       - name: Build (release)
+        if: runner.os != 'macOS'
         run: alr build --release
+
+      - name: Build (release, no static link)
+        if: runner.os == 'macOS'
+        run: alr build --release -- -XSTATIC_LINK=no
 
       - name: Verify binary (Unix)
         if: runner.os != 'Windows'
