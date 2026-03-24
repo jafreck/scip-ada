@@ -685,6 +685,141 @@ test_pragmarc() {
   rm -f "$index"
 }
 
+# ---------------------------------------------------------------------------
+# 4. mk270/whitakers-words — Latin dictionary (311 stars, ~112 source files)
+#    Highest-starred pure-Ada repo that builds standalone (no external deps).
+#    Note: AdaCore/gnatstudio is #1 by stars (497) but requires GNATCOLL,
+#    XMLAda, and many other external dependencies.
+# ---------------------------------------------------------------------------
+test_whitakers_words() {
+  local name="whitakers-words"
+  local url="https://github.com/mk270/whitakers-words.git"
+  local commit="9b11477e53f4adfb17d6f6aa563669dc71e0a680"
+  local repo_dir="$REPOS_DIR/$name"
+
+  log_section "$name — Latin dictionary (~112 source files, library projects)"
+
+  if ! clone_repo "$name" "$url" "$commit"; then
+    record_fail "$name/clone" "git clone failed"
+    return
+  fi
+
+  # Whitaker's Words uses a multi-project layout (shared.gpr, latin_utils.gpr,
+  # support_utils.gpr, words_engine.gpr, commands.gpr). Create a single
+  # wrapper GPR that pulls all source dirs together for indexing.
+  local gpr_path
+  gpr_path="$(write_wrapper_gpr "$repo_dir" "whitakers_words_scip" \
+    "src/latin_utils,src/support_utils,src/words_engine,src/commands")"
+  local gpr_rel
+  gpr_rel="$(basename "$gpr_path")"
+
+  log "Building with wrapper .gpr ..."
+  if ! (cd "$repo_dir" && gprbuild -P "$gpr_rel" -q -p -j0 2>&1); then
+    record_fail "$name/build" "gprbuild failed"
+    return
+  fi
+  record_pass "$name/build"
+
+  local index="$repo_dir/index.scip"
+  log "Indexing ..."
+  if ! (cd "$repo_dir" && "$SCIP_ADA" index \
+        --project "$gpr_rel" \
+        --output "$index" \
+        --exclude b__ \
+        --quiet 2>&1); then
+    record_fail "$name/index" "scip_ada index failed"
+    return
+  fi
+  record_pass "$name/index"
+
+  # --- Tier 1: Structural verifications ---
+  verify_metadata      "$name" "$index"
+  verify_no_empty_docs "$name" "$index"
+  verify_occurrence_ranges "$name" "$index"
+  verify_stats         "$name" "$index" 80 1000 5000
+
+  # --- Tier 2: Content verifications ---
+  verify_symbols       "$name" "$index" \
+    "Latin_Utils" "Words_Engine" "Inflections_Package" "Dictionary"
+  verify_doc_paths     "$name" "$index" ".ads" ".adb"
+  verify_symbols_have_info "$name" "$index"
+
+  # --- Tier 3: Integrity verifications ---
+  verify_xref_integrity   "$name" "$index"
+  verify_def_ref_balance  "$name" "$index"
+
+  rm -f "$index"
+}
+
+# ---------------------------------------------------------------------------
+# 5. rod-chapman/SPARKNaCl — SPARK 2014 NaCl crypto library (132 stars, ~50 files)
+#    Pure SPARK 2014 with formal verification contracts — exercises scip_ada on
+#    SPARK-specific constructs (pre/post conditions, ghost code, subtypes).
+# ---------------------------------------------------------------------------
+test_sparknacl() {
+  local name="SPARKNaCl"
+  local url="https://github.com/rod-chapman/SPARKNaCl.git"
+  local commit="8e3cc2e6a67826cbfb1e36559238e03cb024a706"
+  local repo_dir="$REPOS_DIR/$name"
+
+  log_section "$name — SPARK 2014 crypto library (~50 source files, formal verification)"
+
+  if ! clone_repo "$name" "$url" "$commit"; then
+    record_fail "$name/clone" "git clone failed"
+    return
+  fi
+
+  # SPARKNaCl ships sparknacl.gpr but it's a library project with external
+  # variables and a Prove package. Create a simple wrapper for indexing.
+  local gpr_path
+  gpr_path="$(write_wrapper_gpr "$repo_dir" "sparknacl_scip" "src")"
+  local gpr_rel
+  gpr_rel="$(basename "$gpr_path")"
+
+  log "Building with wrapper .gpr ..."
+  if ! (cd "$repo_dir" && gprbuild -P "$gpr_rel" -q -p -j0 2>&1); then
+    record_fail "$name/build" "gprbuild failed"
+    return
+  fi
+  record_pass "$name/build"
+
+  local index="$repo_dir/index.scip"
+  log "Indexing ..."
+  if ! (cd "$repo_dir" && "$SCIP_ADA" index \
+        --project "$gpr_rel" \
+        --output "$index" \
+        --exclude b__ \
+        --quiet 2>&1); then
+    record_fail "$name/index" "scip_ada index failed"
+    return
+  fi
+  record_pass "$name/index"
+
+  # --- Tier 1: Structural verifications ---
+  verify_metadata      "$name" "$index"
+  verify_no_empty_docs "$name" "$index"
+  verify_occurrence_ranges "$name" "$index"
+  verify_stats         "$name" "$index" 30 500 2000
+
+  # --- Tier 2: Content verifications ---
+  verify_symbols       "$name" "$index" \
+    "SPARKNaCl" "Sign" "Secretbox" "Cryptobox" "Scalar" "Hashing"
+  verify_doc_paths     "$name" "$index" \
+    "sparknacl.ads" "sparknacl-sign.ads" "sparknacl-secretbox.ads"
+  verify_symbols_have_info "$name" "$index"
+  # Keypair is a procedure (kind=17) for generating crypto key pairs
+  verify_symbol_kind      "$name" "$index" "Keypair" 17
+  # Hash is a procedure (kind=17) in hashing packages
+  verify_symbol_kind      "$name" "$index" "Hash" 17
+  verify_symbol_signature "$name" "$index" "Hash" "Hash"
+
+  # --- Tier 3: Integrity verifications ---
+  verify_xref_integrity   "$name" "$index"
+  verify_def_ref_balance  "$name" "$index"
+
+  rm -f "$index"
+}
+
 # ===========================================================================
 # MAIN
 # ===========================================================================
@@ -699,6 +834,8 @@ echo ""
 test_ada_toml
 test_ada_traits_containers
 test_pragmarc
+test_whitakers_words
+test_sparknacl
 
 echo ""
 echo "========================================"
