@@ -33,6 +33,12 @@ jobs:
 
       - name: Install Alire
         uses: alire-project/setup-alire@v4
+        with:
+          version: 2.1.0
+
+      - name: Use private dependencies on Windows
+        if: runner.os == 'Windows'
+        run: alr settings --set dependencies.shared false
 
       - name: Build (release)
         run: alr build --release
