@@ -1,14 +1,21 @@
 name = "scip_ada"
 description = "SCIP indexer for Ada/SPARK"
-version = "0.1.0-dev"
+version = "0.1.0"
 
 authors = ["Jacob Freck"]
 maintainers = ["Jacob Freck <jacob.freck@gmail.com>"]
+maintainers-logins = ["jafreck"]
 licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
-website = ""
-tags = ["scip", "ada", "indexer", "code-navigation"]
+website = "https://github.com/jafreck/scip-ada"
+tags = ["scip", "ada", "indexer", "code-navigation", "sourcegraph", "spark"]
 
 executables = ["scip_ada"]
+
+[gpr-externals]
+ENRICH = ["yes", "no"]
+
+[gpr-set-externals]
+ENRICH = "yes"
 
 [[depends-on]]
 aunit = "^26.0.0"
